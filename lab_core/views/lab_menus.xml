@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_lab_root" name="Laboratoire" sequence="40"
+              web_icon="lab_core,static/description/icon.png"/>
+    <menuitem id="menu_lab_patient" name="Patients" parent="menu_lab_root"
+              action="lab_patient_action" sequence="10"/>
+</odoo>

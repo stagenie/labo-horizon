@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="patient_demo_1" model="lab.patient">
+        <field name="name">Julie Bernard</field>
+        <field name="birthdate">1988-04-12</field>
+        <field name="phone">+33600000011</field>
+    </record>
+    <record id="patient_demo_2" model="lab.patient">
+        <field name="name">Karim Benali</field>
+        <field name="birthdate">1975-11-03</field>
+        <field name="phone">+33600000012</field>
+    </record>
+    <record id="patient_demo_3" model="lab.patient">
+        <field name="name">Lucas Moreau</field>
+        <field name="birthdate">2001-06-25</field>
+        <field name="phone">+33600000013</field>
+    </record>
+    <record id="patient_demo_4" model="lab.patient">
+        <field name="name">Nadia Haddad</field>
+        <field name="birthdate">1964-02-19</field>
+        <field name="phone">+33600000014</field>
+    </record>
+    <record id="patient_demo_5" model="lab.patient">
+        <field name="name">Thomas Lefèvre</field>
+        <field name="birthdate">1952-09-08</field>
+        <field name="phone">+33600000015</field>
+    </record>
+    <record id="patient_demo_6" model="lab.patient">
+        <field name="name">Inès Roussel</field>
+        <field name="birthdate">1993-12-30</field>
+        <field name="phone">+33600000016</field>
+    </record>
+    <record id="patient_demo_7" model="lab.patient">
+        <field name="name">Samir Belkacem</field>
+        <field name="birthdate">1981-07-14</field>
+        <field name="phone">+33600000017</field>
+    </record>
+    <record id="patient_demo_8" model="lab.patient">
+        <field name="name">Chloé Garnier</field>
+        <field name="birthdate">2012-03-05</field>
+        <field name="phone">+33600000018</field>
+    </record>
+    <record id="patient_demo_9" model="lab.patient">
+        <field name="name">Paul Mercier</field>
+        <field name="birthdate">1946-01-22</field>
+        <field name="phone">+33600000019</field>
+    </record>
+    <record id="patient_demo_10" model="lab.patient">
+        <field name="name">Amel Cherif</field>
+        <field name="birthdate">1999-10-10</field>
+        <field name="phone">+33600000020</field>
+    </record>
+</odoo>
