@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_insurer_view_list" model="ir.ui.view">
+        <field name="name">lab.insurer.list</field>
+        <field name="model">lab.insurer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="coverage_rate"/>
+                <field name="phone"/>
+                <field name="email"/>
+            </list>
+        </field>
+    </record>
+    <record id="lab_insurer_view_form" model="ir.ui.view">
+        <field name="name">lab.insurer.form</field>
+        <field name="model">lab.insurer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom de la mutuelle"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="coverage_rate"/>
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="lab_insurer_action" model="ir.actions.act_window">
+        <field name="name">Mutuelles</field>
+        <field name="res_model">lab.insurer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_lab_insurer" name="Mutuelles" parent="lab_core.menu_lab_config"
+              action="lab_insurer_action" sequence="30"/>
+</odoo>

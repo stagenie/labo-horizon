@@ -12,11 +12,15 @@ inventés. Le code n'est pas destiné à un usage médical réel.
 |---|---|
 | `ch00` | dépôt vide : point de départ du chapitre 1 |
 | `ch01` … `ch12` | module `lab_core` (Partie I), état à la fin de chaque chapitre |
+| `ch13` … `ch15` | + module `lab_billing` (Partie II) : contacts, articles, mutuelles, factures |
 
 ```bash
 git clone https://github.com/stagenie/labo-horizon.git
 cd labo-horizon && git checkout ch01
 ```
+
+À partir de `ch13`, le dépôt contient deux modules : installez `lab_billing`, qui installe `lab_core` et la
+Facturation s'ils manquent.
 
 Les solutions des exercices sont dans `solutions/chNN/` (fichiers complets, à comparer avec les vôtres).
 

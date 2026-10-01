@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="insurer_horizon" model="lab.insurer">
+        <field name="name">Mutuelle Horizon Santé</field>
+        <field name="coverage_rate">70</field>
+        <field name="phone">+33 6 00 00 00 50</field>
+        <field name="email">horizon-sante@example.com</field>
+    </record>
+    <record id="insurer_azur" model="lab.insurer">
+        <field name="name">Mutuelle Azur</field>
+        <field name="coverage_rate">60</field>
+        <field name="phone">+33 6 00 00 00 51</field>
+        <field name="email">mutuelle-azur@example.com</field>
+    </record>
+    <record id="lab_core.patient_demo_1" model="lab.patient"><field name="insurer_id" ref="insurer_horizon"/></record>
+    <record id="lab_core.patient_demo_2" model="lab.patient"><field name="insurer_id" ref="insurer_horizon"/></record>
+    <record id="lab_core.patient_demo_3" model="lab.patient"><field name="insurer_id" ref="insurer_horizon"/></record>
+    <record id="lab_core.patient_demo_4" model="lab.patient"><field name="insurer_id" ref="insurer_horizon"/></record>
+    <record id="lab_core.patient_demo_5" model="lab.patient"><field name="insurer_id" ref="insurer_azur"/></record>
+    <record id="lab_core.patient_demo_6" model="lab.patient"><field name="insurer_id" ref="insurer_azur"/></record>
+    <record id="lab_core.patient_demo_7" model="lab.patient"><field name="insurer_id" ref="insurer_azur"/></record>
+</odoo>

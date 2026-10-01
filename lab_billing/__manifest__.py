@@ -1,0 +1,17 @@
+{
+    'name': 'Labo Horizon — Facturation',
+    'version': '20.0.1.13.0',
+    'summary': 'Patients reliés aux contacts, analyses reliées aux articles, mutuelles',
+    'category': 'Services',
+    'author': 'OdooSkills',
+    'website': 'https://odooskills.com',
+    'license': 'LGPL-3',
+    'depends': ['lab_core', 'account'],
+    'data': [
+        'security/lab_billing_security.xml',
+        'security/ir.access.csv',
+        'data/lab_analysis_price_data.xml',
+        'views/lab_insurer_views.xml',
+    ],
+    'demo': ['demo/lab_billing_demo.xml'],
+}
