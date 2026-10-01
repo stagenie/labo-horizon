@@ -26,7 +26,7 @@ Dans `report/lab_request_report.xml`, l'expression `print_report_name` devient :
 
 L'expression est évaluée par le contrôleur de téléchargement avec `object` (l'enregistrement imprimé) et
 `time` ; elle n'est utilisée que pour l'impression d'un seul document. Le nom obtenu, par exemple
-`CR-PAT00003-DEM/2026/00012`, est nettoyé par le navigateur (la barre oblique n'est pas permise dans un nom de
+`CR-PAT-00007-DEM/2026/00012`, est nettoyé par le navigateur (la barre oblique n'est pas permise dans un nom de
 fichier).
 
 Critère : le test `test_report_file_name` passe.

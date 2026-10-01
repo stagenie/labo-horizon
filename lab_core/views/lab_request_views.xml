@@ -29,7 +29,7 @@
                     <button name="action_validate" type="object" string="Valider" class="btn-primary"
                             invisible="state != 'analysed'" groups="lab_core.group_lab_biologist"/>
                     <button name="%(lab_core.action_report_lab_request)d" type="action" string="Imprimer le compte rendu"
-                            invisible="state != 'validated'"/>
+                            invisible="state != 'validated'" groups="lab_core.group_lab_technician"/>
                     <button name="action_reset_draft" type="object" string="Remettre en brouillon"
                             invisible="state in ('draft', 'validated')" groups="lab_core.group_lab_biologist"/>
                     <field name="state" widget="statusbar"/>

@@ -1,4 +1,4 @@
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from .common import LabCoreCommon
 
@@ -37,3 +37,14 @@ class TestLabReport(LabCoreCommon):
         req = self._new_request('panel_bil1')
         html, _fmt = self.env['ir.actions.report']._render_qweb_html('lab_core.action_report_lab_request', req.ids)
         self.assertIn('Document non validé', html.decode())
+
+    def test_report_reserved_to_technical_staff(self):
+        # la secrétaire ne lit pas les résultats (chapitre 10) : son compte rendu aurait un tableau vide
+        report = self.env.ref('lab_core.action_report_lab_request')
+        secretary = new_test_user(self.env, 'lab_sec_report', groups='lab_core.group_lab_secretary')
+        technician = new_test_user(self.env, 'lab_tech_report', groups='lab_core.group_lab_technician')
+        for user, expected in ((secretary, False), (technician, True)):
+            bindings = self.env['ir.actions.actions'].with_user(user).get_bindings('lab.request')
+            self.assertEqual(report.id in [a['id'] for a in bindings.get('report', [])], expected)
+            arch = self.env['lab.request'].with_user(user).get_views([(False, 'form')])['views']['form']['arch']
+            self.assertEqual('Imprimer le compte rendu' in arch, expected)
