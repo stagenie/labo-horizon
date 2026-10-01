@@ -66,6 +66,7 @@ class LabRequest(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            vals['state'] = 'draft'   # toute demande commence en brouillon, même créée depuis une colonne du kanban
             if vals.get('name', 'Nouvelle') == 'Nouvelle':
                 vals['name'] = self.env['ir.sequence'].next_by_code('lab.request')
         requests = super().create(vals_list)

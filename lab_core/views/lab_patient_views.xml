@@ -55,6 +55,22 @@
             </form>
         </field>
     </record>
+    <record id="lab_patient_view_search" model="ir.ui.view">
+        <field name="name">lab.patient.search</field>
+        <field name="model">lab.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="email"/>
+                <filter name="female" string="Femmes" domain="[('gender', '=', 'female')]"/>
+                <filter name="male" string="Hommes" domain="[('gender', '=', 'male')]"/>
+                <group>
+                    <filter name="group_gender" string="Sexe" context="{'group_by': 'gender'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
     <record id="lab_patient_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="res_model">lab.patient</field>

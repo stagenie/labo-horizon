@@ -95,4 +95,55 @@
     <record id="request_demo_3" model="lab.request">
         <field name="patient_id" ref="patient_demo_9"/>
     </record>
+    <record id="request_demo_4" model="lab.request">
+        <field name="patient_id" ref="patient_demo_4"/>
+        <field name="prescriber_id" ref="partner_dr_durand"/>
+        <field name="date_request" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d 08:30:00')"/>
+        <field name="note">Bilan annuel de médecine du travail.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_bil1')])]"/>
+        <field name="result_ids" eval="[(0, 0, {'analysis_id': ref('analysis_gly'), 'value_text': '0.95'}), (0, 0, {'analysis_id': ref('analysis_hb'), 'value_text': '13.1'}), (0, 0, {'analysis_id': ref('analysis_crp'), 'value_text': '2'})]"/>
+    </record>
+    <record id="request_demo_5" model="lab.request">
+        <field name="patient_id" ref="patient_demo_5"/>
+        <field name="prescriber_id" ref="partner_dr_amrani"/>
+        <field name="date_request" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d 08:30:00')"/>
+        <field name="note">Contrôle lipidique après six mois de régime.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_eal')])]"/>
+        <field name="result_ids" eval="[(0, 0, {'analysis_id': ref('analysis_chol'), 'value_text': '2.35'}), (0, 0, {'analysis_id': ref('analysis_hdl'), 'value_text': '0.45'}), (0, 0, {'analysis_id': ref('analysis_ldl'), 'value_text': '1.75'}), (0, 0, {'analysis_id': ref('analysis_tg'), 'value_text': '1.40'})]"/>
+    </record>
+    <record id="request_demo_6" model="lab.request">
+        <field name="patient_id" ref="patient_demo_6"/>
+        <field name="prescriber_id" ref="partner_dr_durand"/>
+        <field name="date_request" eval="(DateTime.today() - relativedelta(days=4)).strftime('%Y-%m-%d 08:30:00')"/>
+        <field name="note">Soif intense et fatigue depuis trois semaines.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_bil1')])]"/>
+        <field name="result_ids" eval="[(0, 0, {'analysis_id': ref('analysis_gly'), 'value_text': '1.38'}), (0, 0, {'analysis_id': ref('analysis_hb'), 'value_text': '12.8'}), (0, 0, {'analysis_id': ref('analysis_crp'), 'value_text': '3'})]"/>
+    </record>
+    <record id="request_demo_7" model="lab.request">
+        <field name="patient_id" ref="patient_demo_7"/>
+        <field name="prescriber_id" ref="partner_dr_amrani"/>
+        <field name="date_request" eval="(DateTime.today() - relativedelta(days=6)).strftime('%Y-%m-%d 08:30:00')"/>
+        <field name="note">Pâleur, essoufflement à l'effort.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_bil1')])]"/>
+        <field name="result_ids" eval="[(0, 0, {'analysis_id': ref('analysis_gly'), 'value_text': '0.88'}), (0, 0, {'analysis_id': ref('analysis_hb'), 'value_text': '12.1'}), (0, 0, {'analysis_id': ref('analysis_crp'), 'value_text': '1'})]"/>
+    </record>
+    <record id="request_demo_8" model="lab.request">
+        <field name="patient_id" ref="patient_demo_8"/>
+        <field name="prescriber_id" ref="partner_dr_amrani"/>
+        <field name="date_request" eval="(DateTime.today() - relativedelta(days=8)).strftime('%Y-%m-%d 08:30:00')"/>
+        <field name="note">Dépistage cardiovasculaire.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_eal')])]"/>
+    </record>
+    <record id="request_demo_9" model="lab.request">
+        <field name="patient_id" ref="patient_demo_9"/>
+        <field name="prescriber_id" ref="partner_dr_durand"/>
+        <field name="date_request" eval="(DateTime.today() - relativedelta(days=11)).strftime('%Y-%m-%d 08:30:00')"/>
+        <field name="note">Bilan préopératoire.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_bil1')])]"/>
+    </record>
+    <function model="lab.request" name="action_sample"
+              eval="[[ref('request_demo_4'), ref('request_demo_5'), ref('request_demo_6'), ref('request_demo_7')]]"/>
+    <function model="lab.request" name="action_analyse"
+              eval="[[ref('request_demo_4'), ref('request_demo_5'), ref('request_demo_6')]]"/>
+    <function model="lab.request" name="action_validate" eval="[[ref('request_demo_4')]]"/>
 </odoo>

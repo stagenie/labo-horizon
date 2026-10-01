@@ -6,6 +6,8 @@
               action="lab_request_action" sequence="5"/>
     <menuitem id="menu_lab_patient" name="Patients" parent="menu_lab_root"
               action="lab_patient_action" sequence="10"/>
+    <menuitem id="menu_lab_stats" name="Statistiques" parent="menu_lab_root"
+              action="lab_result_stats_action" sequence="50"/>
     <menuitem id="menu_lab_config" name="Configuration" parent="menu_lab_root" sequence="90"/>
     <menuitem id="menu_lab_analysis" name="Analyses" parent="menu_lab_config"
               action="lab_analysis_action" sequence="10"/>

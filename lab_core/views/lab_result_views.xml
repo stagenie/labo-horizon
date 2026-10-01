@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_result_view_pivot" model="ir.ui.view">
+        <field name="name">lab.result.pivot</field>
+        <field name="model">lab.result</field>
+        <field name="arch" type="xml">
+            <pivot string="Résultats">
+                <field name="analysis_id" type="row"/>
+                <field name="flag" type="col"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="lab_result_view_graph" model="ir.ui.view">
+        <field name="name">lab.result.graph</field>
+        <field name="model">lab.result</field>
+        <field name="arch" type="xml">
+            <graph string="Résultats" type="bar" stacked="1">
+                <field name="analysis_id"/>
+                <field name="flag"/>
+            </graph>
+        </field>
+    </record>
+    <record id="lab_result_stats_action" model="ir.actions.act_window">
+        <field name="name">Statistiques des résultats</field>
+        <field name="res_model">lab.result</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('flag', '!=', 'pending')]</field>
+    </record>
+</odoo>

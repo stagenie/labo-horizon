@@ -96,6 +96,7 @@
                 <field name="patient_id"/>
                 <filter name="to_validate" string="À valider" domain="[('state', '=', 'analysed')]"/>
                 <filter name="abnormal" string="Hors normes" domain="[('abnormal_count', '>', 0)]"/>
+                <filter name="my_validations" string="Mes validations" domain="[('activity_user_id', '=', uid)]"/>
                 <filter name="today" string="Aujourd'hui"
                         domain="[('date_request', '>=', context_today().strftime('%Y-%m-%d'))]"/>
                 <group>
@@ -114,9 +115,18 @@
             </calendar>
         </field>
     </record>
+    <record id="lab_request_view_graph" model="ir.ui.view">
+        <field name="name">lab.request.graph</field>
+        <field name="model">lab.request</field>
+        <field name="arch" type="xml">
+            <graph string="Demandes par semaine" type="line">
+                <field name="date_request" interval="week"/>
+            </graph>
+        </field>
+    </record>
     <record id="lab_request_action" model="ir.actions.act_window">
         <field name="name">Demandes</field>
         <field name="res_model">lab.request</field>
-        <field name="view_mode">kanban,list,form,calendar</field>
+        <field name="view_mode">kanban,list,form,calendar,graph</field>
     </record>
 </odoo>
