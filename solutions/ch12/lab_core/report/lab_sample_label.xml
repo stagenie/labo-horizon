@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_lab_label" model="report.paperformat">
+        <field name="name">Étiquette de tube 60 x 30 mm</field>
+        <field name="format">custom</field>
+        <field name="page_width">60</field>
+        <field name="page_height">30</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">1</field><field name="margin_bottom">1</field>
+        <field name="margin_left">1</field><field name="margin_right">1</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+    <template id="report_lab_sample_label">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="s">
+                <div class="page" style="font-size: 9px;">
+                    <strong t-out="s.patient_id.name"/> · <t t-out="s.request_id.name"/><br/>
+                    <t t-out="s.patient_id.age"/> ans · <span t-field="s.patient_id.gender"/><br/>
+                    <img t-att-src="'/report/barcode/Code128/%s?width=600&amp;height=120' % s.barcode"
+                         style="width: 100%; height: 12mm;"/>
+                    <div t-out="s.barcode"/>
+                </div>
+            </t>
+        </t>
+    </template>
+    <record id="action_report_lab_sample_label" model="ir.actions.report">
+        <field name="name">Étiquette de tube</field>
+        <field name="model">lab.sample</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">lab_core.report_lab_sample_label</field>
+        <field name="paperformat_id" ref="paperformat_lab_label"/>
+        <field name="binding_model_id" ref="model_lab_sample"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

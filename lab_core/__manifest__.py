@@ -1,6 +1,6 @@
 {
     'name': 'Labo Horizon — Laboratoire',
-    'version': '20.0.1.11.0',
+    'version': '20.0.1.12.0',
     'summary': "Patients, demandes d'analyses, résultats et comptes rendus",
     'category': 'Services',
     'author': 'OdooSkills',
@@ -14,6 +14,9 @@
         'data/lab_analysis_data.xml',
         'data/lab_panel_data.xml',
         'data/lab_sequence_fix.xml',
+        'report/lab_request_report_templates.xml',
+        'report/lab_request_report.xml',
+        'report/lab_sample_label.xml',
         'views/lab_patient_views.xml',
         'views/lab_catalog_views.xml',
         'wizard/lab_result_entry_views.xml',

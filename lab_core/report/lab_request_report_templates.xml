@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_lab_request_document">
+        <t t-call="web.external_layout" o="o">
+            <div class="page">
+                <h2>Compte rendu d'analyses <span t-field="o.name"/></h2>
+                <div class="row mt-3 mb-3">
+                    <div class="col-6">
+                        <strong>Patient :</strong> <span t-field="o.patient_id.name"/><br/>
+                        <strong>Né(e) le :</strong> <span t-field="o.patient_id.birthdate"/>
+                        (<t t-out="o.patient_id.age"/> ans)
+                    </div>
+                    <div class="col-6">
+                        <strong>Prescripteur :</strong> <span t-out="o.prescriber_id.name or '-'"/><br/>
+                        <strong>Date :</strong> <span t-field="o.date_request"/>
+                    </div>
+                </div>
+                <table class="table table-sm">
+                    <thead>
+                        <tr><th>Analyse</th><th class="text-end">Résultat</th><th>Unité</th>
+                            <th class="text-end">Valeurs de référence</th><th/></tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.result_ids" t-as="r"
+                            t-att-class="'lab-flag-' + r.flag + (' fw-bold' if r.flag in ('low', 'high') else '')">
+                            <td t-out="r.analysis_id.name"/>
+                            <td class="text-end" t-out="r.value_text or '-'"/>
+                            <td t-out="r.unit or ''"/>
+                            <td class="text-end">
+                                <t t-if="r.flag != 'text'"><span t-field="r.range_min"/> – <span t-field="r.range_max"/></t>
+                            </td>
+                            <td><t t-if="r.flag == 'high'">▲</t><t t-if="r.flag == 'low'">▼</t></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p t-if="o.validated_by_id" class="mt-4">
+                    Validé par <span t-field="o.validated_by_id.name"/> le <span t-field="o.validated_date"/>
+                </p>
+                <p t-else="" class="mt-4 text-danger">Document non validé — ne pas remettre au patient.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_lab_request">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="lab_core.report_lab_request_document" o="o"/>
+            </t>
+        </t>
+    </template>
+</odoo>
