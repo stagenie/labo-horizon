@@ -9,6 +9,14 @@ STATES = [
     ('validated', 'Validée'),
 ]
 
+# Pour chaque état d'arrivée, les états d'où une demande peut y venir.
+STATE_FROM = {
+    'draft': ('sampled', 'analysed'),
+    'sampled': ('draft',),
+    'analysed': ('sampled',),
+    'validated': ('analysed',),
+}
+
 
 class LabRequest(models.Model):
     _name = 'lab.request'
@@ -65,6 +73,7 @@ class LabRequest(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            vals['state'] = 'draft'   # toute demande commence en brouillon, même créée depuis une colonne du kanban
             if vals.get('name', 'Nouvelle') == 'Nouvelle':
                 vals['name'] = self.env['ir.sequence'].next_by_code('lab.request')
         requests = super().create(vals_list)
@@ -72,16 +81,26 @@ class LabRequest(models.Model):
         return requests
 
     def write(self, vals):
+        if 'state' in vals:
+            moved = self.filtered(lambda r: r.state != vals['state'])
+            if any(r.state not in STATE_FROM[vals['state']] for r in moved):
+                raise UserError(_("Ce changement d'état ne suit pas le cycle de la demande."))
         if vals.get('state') == 'validated' and not self.env.context.get('lab_validation'):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
+        if vals.get('state') == 'validated' and not self.env.user.has_group('lab_core.group_lab_biologist'):
+            raise AccessError(_("Seul un biologiste peut valider une demande."))
         if vals.get('state') in ('sampled', 'analysed') and not self.env.user.has_group('lab_core.group_lab_technician'):
             raise AccessError(_("Seul le personnel technique fait avancer une demande."))
         if vals.get('state') == 'draft' and not self.env.user.has_group('lab_core.group_lab_biologist'):
             raise AccessError(_("Seul un biologiste peut remettre une demande en brouillon."))
-        return super().write(vals)
+        result = super().write(vals)
+        if 'panel_ids' in vals:
+            self.sudo()._sync_results_from_panels()   # la secrétaire ne lit pas les résultats existants
+        return result
 
     def _schedule_validation_activity(self):
-        biologist = self.env.ref('lab_core.group_lab_biologist').user_ids.filtered(lambda u: not u.share)[:1]
+        biologists = self.env.ref('lab_core.group_lab_biologist').user_ids.filtered(lambda u: not u.share)
+        biologist = (biologists - self.env.ref('base.user_admin'))[:1] or biologists[:1]
         for request in self:
             request.activity_schedule(
                 'mail.mail_activity_data_todo',

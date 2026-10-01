@@ -80,17 +80,20 @@ class LabRequest(models.Model):
                 raise UserError(_("Ce changement d'état ne suit pas le cycle de la demande."))
         if vals.get('state') == 'validated' and not self.env.context.get('lab_validation'):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
+        if vals.get('state') == 'validated' and not self.env.user.has_group('lab_core.group_lab_biologist'):
+            raise AccessError(_("Seul un biologiste peut valider une demande."))
         if vals.get('state') in ('sampled', 'analysed') and not self.env.user.has_group('lab_core.group_lab_technician'):
             raise AccessError(_("Seul le personnel technique fait avancer une demande."))
         if vals.get('state') == 'draft' and not self.env.user.has_group('lab_core.group_lab_biologist'):
             raise AccessError(_("Seul un biologiste peut remettre une demande en brouillon."))
         result = super().write(vals)
         if 'panel_ids' in vals:
-            self._sync_results_from_panels()
+            self.sudo()._sync_results_from_panels()   # la secrétaire ne lit pas les résultats existants
         return result
 
     def _schedule_validation_activity(self):
-        biologist = self.env.ref('lab_core.group_lab_biologist').user_ids.filtered(lambda u: not u.share)[:1]
+        biologists = self.env.ref('lab_core.group_lab_biologist').user_ids.filtered(lambda u: not u.share)
+        biologist = (biologists - self.env.ref('base.user_admin'))[:1] or biologists[:1]
         for request in self:
             request.activity_schedule(
                 'mail.mail_activity_data_todo',

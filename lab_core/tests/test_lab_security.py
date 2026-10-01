@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import new_test_user, tagged
 
@@ -12,7 +13,7 @@ class TestLabSecurity(LabCoreCommon):
         super().setUpClass()
         cls.secretary = new_test_user(cls.env, 'lab_sec', groups='lab_core.group_lab_secretary')
         cls.technician = new_test_user(cls.env, 'lab_tech', groups='lab_core.group_lab_technician')
-        cls.biologist = new_test_user(cls.env, 'lab_bio', groups='lab_core.group_lab_biologist')
+        cls.biologist = new_test_user(cls.env, 'lab_bio', name='Zoé Vidal', groups='lab_core.group_lab_biologist')
         cls.request = cls._new_request(cls, 'panel_eal')
 
     def test_secretary_cannot_read_results(self):
@@ -42,7 +43,7 @@ class TestLabSecurity(LabCoreCommon):
         req.action_sample()
         req.result_ids.value_text = '1'
         req.with_user(self.technician).action_analyse()
-        self.assertTrue(req.activity_ids.user_id.has_group('lab_core.group_lab_biologist'))
+        self.assertEqual(req.activity_ids.user_id, self.biologist)   # pas l'administrateur
 
     def test_technician_cannot_delete_request(self):
         with self.assertRaises(AccessError):
@@ -83,3 +84,19 @@ class TestLabSecurity(LabCoreCommon):
         req.action_sample()
         with self.assertRaises(AccessError):
             req.with_user(self.technician).write({'state': 'draft'})
+
+    def test_validation_context_is_not_an_authorisation(self):
+        req = self.request
+        req.action_sample()
+        req.result_ids.value_text = '1'
+        req.action_analyse()
+        with self.assertRaises(AccessError):
+            req.with_user(self.technician).with_context(lab_validation=True).write({'state': 'validated'})
+
+    def test_secretary_adds_panel_to_existing_request(self):
+        req = self.env['lab.request'].with_user(self.secretary).create({
+            'patient_id': self.alice.id,
+            'panel_ids': [Command.set(self.env.ref('lab_core.panel_bil1').ids)],
+        })
+        req.write({'panel_ids': [Command.link(self.env.ref('lab_core.panel_eal').id)]})
+        self.assertEqual(len(req.sudo().result_ids), 7)

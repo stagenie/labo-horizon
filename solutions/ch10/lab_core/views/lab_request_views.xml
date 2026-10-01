@@ -75,7 +75,7 @@
         <field name="name">lab.request.kanban</field>
         <field name="model">lab.request</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <kanban default_group_by="state" records_draggable="0">
                 <templates>
                     <t t-name="card">
                         <field name="name" class="fw-bold"/>
