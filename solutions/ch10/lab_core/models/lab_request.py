@@ -74,6 +74,8 @@ class LabRequest(models.Model):
     def write(self, vals):
         if vals.get('state') == 'validated' and not self.env.context.get('lab_validation'):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
+        if vals.get('state') in ('sampled', 'analysed') and not self.env.user.has_group('lab_core.group_lab_technician'):
+            raise AccessError(_("Seul le personnel technique fait avancer une demande."))
         return super().write(vals)
 
     def _schedule_validation_activity(self):

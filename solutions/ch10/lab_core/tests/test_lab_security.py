@@ -74,6 +74,10 @@ class TestLabSecurity(LabCoreCommon):
         with self.assertRaises(AccessError):
             self.Patient.with_user(user).search([])
 
+    def test_secretary_cannot_move_request_forward(self):
+        with self.assertRaises(AccessError):
+            self.request.with_user(self.secretary).write({'state': 'sampled'})
+
     def test_validated_request_cannot_be_deleted(self):
         req = self.request
         req.action_sample()

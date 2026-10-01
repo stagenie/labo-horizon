@@ -73,3 +73,7 @@ class TestLabSecurity(LabCoreCommon):
         user = new_test_user(self.env, 'lab_other', groups='base.group_user')
         with self.assertRaises(AccessError):
             self.Patient.with_user(user).search([])
+
+    def test_secretary_cannot_move_request_forward(self):
+        with self.assertRaises(AccessError):
+            self.request.with_user(self.secretary).write({'state': 'sampled'})

@@ -80,6 +80,8 @@ class LabRequest(models.Model):
                 raise UserError(_("Ce changement d'état ne suit pas le cycle de la demande."))
         if vals.get('state') == 'validated' and not self.env.context.get('lab_validation'):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
+        if vals.get('state') in ('sampled', 'analysed') and not self.env.user.has_group('lab_core.group_lab_technician'):
+            raise AccessError(_("Seul le personnel technique fait avancer une demande."))
         result = super().write(vals)
         if 'panel_ids' in vals:
             self._sync_results_from_panels()
