@@ -12,3 +12,4 @@ class LabPatient(models.Model):
     gender = fields.Selection([('female', 'Femme'), ('male', 'Homme')], 'Sexe')
     email = fields.Char('E-mail')
     notes = fields.Html('Notes internes', help="Informations utiles à l'accueil ; jamais transmises au patient.")
+    request_ids = fields.One2many('lab.request', 'patient_id', 'Demandes')

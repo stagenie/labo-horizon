@@ -33,6 +33,15 @@
                         </group>
                     </group>
                     <notebook>
+                        <page name="requests" string="Demandes">
+                            <field name="request_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date_request"/>
+                                    <field name="prescriber_id"/>
+                                </list>
+                            </field>
+                        </page>
                         <page name="notes" string="Notes">
                             <field name="notes"/>
                         </page>

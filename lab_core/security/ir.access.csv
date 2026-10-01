@@ -2,3 +2,5 @@ id,name,model_id,group_id/id,operation,domain
 access_lab_patient_user,Patient : utilisateur interne,lab.patient,base.group_user,crud,
 access_lab_analysis_user,Analyse : utilisateur interne,lab.analysis,base.group_user,crud,
 access_lab_request_user,Demande : utilisateur interne,lab.request,base.group_user,crud,
+access_lab_result_user,Résultat : utilisateur interne,lab.result,base.group_user,crud,
+access_lab_sample_user,Tube : utilisateur interne,lab.sample,base.group_user,crud,

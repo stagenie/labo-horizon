@@ -27,6 +27,25 @@
                         <field name="date_request"/>
                     </group>
                     <field name="note" placeholder="Renseignements cliniques transmis par le prescripteur"/>
+                    <notebook>
+                        <page name="results" string="Résultats">
+                            <field name="result_ids">
+                                <list editable="bottom">
+                                    <field name="analysis_id"/>
+                                    <field name="value_text"/>
+                                    <field name="unit"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="samples" string="Tubes">
+                            <field name="sample_ids">
+                                <list editable="bottom">
+                                    <field name="sample_type"/>
+                                    <field name="collected_at"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

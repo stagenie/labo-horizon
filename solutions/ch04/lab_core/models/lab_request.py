@@ -24,3 +24,7 @@ class LabRequest(models.Model):
 
     def _get_results_by_code(self):
         return self.result_ids.sorted('analysis_code')
+
+    def _get_blood_results(self):
+        """ Résultats des analyses faites sur un tube de sang. """
+        return self.result_ids.filtered(lambda r: r.analysis_id.sample_type == 'blood')

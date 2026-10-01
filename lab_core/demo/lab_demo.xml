@@ -84,6 +84,7 @@
         <field name="patient_id" ref="patient_demo_1"/>
         <field name="prescriber_id" ref="partner_dr_durand"/>
         <field name="note">Bilan de fatigue, à jeun depuis 12 h.</field>
+        <field name="result_ids" eval="[(0, 0, {'analysis_id': ref('analysis_gly'), 'value_text': '1.32'}), (0, 0, {'analysis_id': ref('analysis_hb'), 'value_text': '12.4'}), (0, 0, {'analysis_id': ref('analysis_crp')})]"/>
     </record>
     <record id="request_demo_2" model="lab.request">
         <field name="patient_id" ref="patient_demo_2"/>

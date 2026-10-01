@@ -54,3 +54,15 @@ class TestLabRequest(LabCoreCommon):
     def test_patient_sees_its_requests(self):
         req = self._request_with(['gly'])
         self.assertIn(req, self.alice.request_ids)
+
+    def test_blood_results(self):
+        req = self._request_with(['gly', 'ecbu', 'hb'])
+        self.assertEqual(sorted(req._get_blood_results().mapped('analysis_code')), ['GLY', 'HB'])
+
+    def test_copy_keeps_results_not_samples(self):
+        req = self._request_with(['gly', 'hb'])
+        req.sample_ids = [Command.create({'sample_type': 'blood'})]
+        dup = req.copy()
+        self.assertEqual(dup.result_ids.mapped('analysis_code'), ['GLY', 'HB'])
+        self.assertNotEqual(dup.result_ids, req.result_ids)
+        self.assertFalse(dup.sample_ids)
