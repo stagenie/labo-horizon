@@ -1,4 +1,6 @@
-from odoo import fields, models
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
 
 
 class LabPatient(models.Model):
@@ -13,3 +15,10 @@ class LabPatient(models.Model):
     email = fields.Char('E-mail')
     notes = fields.Html('Notes internes', help="Informations utiles à l'accueil ; jamais transmises au patient.")
     request_ids = fields.One2many('lab.request', 'patient_id', 'Demandes')
+    age = fields.Integer('Âge', compute='_compute_age')
+
+    @api.depends('birthdate')
+    def _compute_age(self):
+        today = fields.Date.context_today(self)
+        for patient in self:
+            patient.age = relativedelta(today, patient.birthdate).years if patient.birthdate else 0

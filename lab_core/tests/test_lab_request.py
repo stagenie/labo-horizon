@@ -71,3 +71,26 @@ class TestLabRequest(LabCoreCommon):
         req._sync_results_from_panels()
         self.assertEqual(len(req.result_ids), 7)
         self.assertEqual(req.result_ids.filtered(lambda r: r.analysis_code == 'GLY').value_text, '1,02')
+
+    def test_value_parsing_and_flags(self):
+        req = self._new_request('panel_bil1')
+        by_code = {r.analysis_code: r for r in req.result_ids}
+        by_code['GLY'].value_text = ' 1,25 '
+        by_code['HB'].value_text = '12.5'      # femme : 12-16 -> normal (homme : bas)
+        by_code['CRP'].value_text = '<0,5'
+        self.assertEqual(by_code['GLY'].flag, 'high')
+        self.assertAlmostEqual(by_code['GLY'].value, 1.25)
+        self.assertEqual(by_code['HB'].flag, 'normal')
+        self.assertEqual(by_code['CRP'].flag, 'text')
+        self.assertEqual(req.abnormal_count, 1)
+
+    def test_empty_value_is_pending(self):
+        req = self._new_request('panel_eal')
+        self.assertEqual(set(req.result_ids.mapped('flag')), {'pending'})
+
+    def test_flag_follows_gender_change(self):
+        req = self._new_request('panel_bil1')
+        hb = req.result_ids.filtered(lambda r: r.analysis_code == 'HB')
+        hb.value_text = '12.5'
+        self.alice.gender = 'male'
+        self.assertEqual(hb.flag, 'low')

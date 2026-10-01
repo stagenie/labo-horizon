@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.fields import Command
 
 
@@ -15,6 +15,13 @@ class LabRequest(models.Model):
     result_ids = fields.One2many('lab.result', 'request_id', 'Résultats', copy=True)
     sample_ids = fields.One2many('lab.sample', 'request_id', 'Tubes', copy=False)
     panel_ids = fields.Many2many('lab.panel', string='Bilans')
+    patient_gender = fields.Selection(related='patient_id.gender')
+    abnormal_count = fields.Integer('Hors normes', compute='_compute_abnormal_count', store=True)
+
+    @api.depends('result_ids.flag')
+    def _compute_abnormal_count(self):
+        for request in self:
+            request.abnormal_count = len(request.result_ids.filtered(lambda r: r.flag in ('low', 'high')))
 
     def _get_sample_types(self):
         """ Types de prélèvement nécessaires aux demandes, sans doublon, triés. """

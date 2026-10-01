@@ -52,6 +52,16 @@
             </form>
         </field>
     </record>
+    <record id="lab_patient_view_search" model="ir.ui.view">
+        <field name="name">lab.patient.search</field>
+        <field name="model">lab.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="minors" string="Mineurs" domain="[('is_minor', '=', True)]"/>
+            </search>
+        </field>
+    </record>
     <record id="lab_patient_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="res_model">lab.patient</field>

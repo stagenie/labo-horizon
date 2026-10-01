@@ -1,6 +1,6 @@
 {
     'name': 'Labo Horizon — Laboratoire',
-    'version': '20.0.1.5.0',
+    'version': '20.0.1.6.0',
     'summary': "Patients, demandes d'analyses, résultats et comptes rendus",
     'category': 'Services',
     'author': 'OdooSkills',

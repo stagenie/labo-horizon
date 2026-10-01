@@ -2,7 +2,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import new_test_user, tagged
 
 from .common import LabCoreCommon
@@ -42,3 +42,14 @@ class TestLabPatient(LabCoreCommon):
 
     def test_age_without_birthdate(self):
         self.assertEqual(self.Patient.create({'name': 'Sans date'}).age, 0)
+
+    def test_minor_search(self):
+        child = self.Patient.create({'name': 'Léo Petit', 'birthdate': date.today() - relativedelta(years=10)})
+        minors = self.Patient.search([('is_minor', '=', True)])
+        self.assertIn(child, minors)
+        self.assertNotIn(self.alice, minors)
+        self.assertIn(self.alice, self.Patient.search([('is_minor', '=', False)]))
+
+    def test_future_birthdate_refused(self):
+        with self.assertRaises(ValidationError):
+            self.Patient.create({'name': 'Futur', 'birthdate': date.today() + relativedelta(days=1)})

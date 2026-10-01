@@ -4,11 +4,12 @@
         <field name="name">lab.request.list</field>
         <field name="model">lab.request</field>
         <field name="arch" type="xml">
-            <list>
+            <list decoration-danger="abnormal_count > 0">
                 <field name="name"/>
                 <field name="patient_id"/>
                 <field name="prescriber_id"/>
                 <field name="date_request"/>
+                <field name="abnormal_count"/>
             </list>
         </field>
     </record>
@@ -26,6 +27,7 @@
                     </div>
                     <group>
                         <field name="patient_id"/>
+                        <field name="patient_gender"/>
                         <field name="prescriber_id"/>
                         <field name="date_request"/>
                         <field name="panel_ids" widget="many2many_tags"/>
@@ -34,10 +36,13 @@
                     <notebook>
                         <page name="results" string="Résultats">
                             <field name="result_ids">
-                                <list editable="bottom">
+                                <list editable="bottom" decoration-danger="flag in ('low', 'high')">
                                     <field name="analysis_id"/>
                                     <field name="value_text"/>
                                     <field name="unit"/>
+                                    <field name="range_min"/>
+                                    <field name="range_max"/>
+                                    <field name="flag"/>
                                 </list>
                             </field>
                         </page>
