@@ -7,13 +7,14 @@ class LabPatient(models.Model):
     _name = 'lab.patient'
     _description = 'Patient'
     _order = 'name'
+    _inherit = ['mail.thread']
 
-    name = fields.Char('Nom', required=True)
+    name = fields.Char('Nom', required=True, tracking=True)
     ref = fields.Char('Référence', readonly=True, copy=False, index=True)
     birthdate = fields.Date('Date de naissance')
-    phone = fields.Char('Téléphone')
+    phone = fields.Char('Téléphone', tracking=True)
     gender = fields.Selection([('female', 'Femme'), ('male', 'Homme')], 'Sexe')
-    email = fields.Char('E-mail')
+    email = fields.Char('E-mail', tracking=True)
     notes = fields.Html('Notes internes', help="Informations utiles à l'accueil ; jamais transmises au patient.")
     request_ids = fields.One2many('lab.request', 'patient_id', 'Demandes')
     age = fields.Integer('Âge', compute='_compute_age')

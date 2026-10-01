@@ -1,3 +1,5 @@
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
@@ -107,6 +109,7 @@ class LabRequest(models.Model):
                 raise UserError(_("%s : aucune analyse à prélever.", request.name))
             request.sample_ids = [Command.create({'sample_type': t}) for t in request._get_sample_types()]
             request.state = 'sampled'
+            request.message_post(body=Markup(_("<b>%s</b> tube(s) prélevé(s).")) % len(request.sample_ids))
 
     def action_analyse(self):
         for request in self.filtered(lambda r: r.state == 'sampled'):
@@ -125,6 +128,12 @@ class LabRequest(models.Model):
             'validated_date': fields.Datetime.now(),
         })
         to_validate.activity_feedback(['mail.mail_activity_data_todo'])
+        for request in to_validate.filtered('abnormal_count'):
+            request.activity_schedule(
+                'mail.mail_activity_data_call',
+                summary=_("Appeler le patient"),
+                user_id=self.env.uid,
+            )
         return True
 
     def action_reset_draft(self):
