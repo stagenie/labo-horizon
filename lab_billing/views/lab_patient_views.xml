@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_patient_view_form_billing" model="ir.ui.view">
+        <field name="name">lab.patient.form.billing</field>
+        <field name="model">lab.patient</field>
+        <field name="inherit_id" ref="lab_core.lab_patient_view_form"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="insurer_id"/>
+                <field name="partner_id" invisible="not partner_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

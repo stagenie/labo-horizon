@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_patient_view_form_billing" model="ir.ui.view">
+        <field name="name">lab.patient.form.billing</field>
+        <field name="model">lab.patient</field>
+        <field name="inherit_id" ref="lab_core.lab_patient_view_form"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="insurer_id"/>
+                <field name="partner_id" invisible="not partner_id"/>
+            </field>
+        </field>
+    </record>
+    <record id="lab_patient_view_list_billing" model="ir.ui.view">
+        <field name="name">lab.patient.list.billing</field>
+        <field name="model">lab.patient</field>
+        <field name="inherit_id" ref="lab_core.lab_patient_view_list"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="insurer_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+    <record id="lab_patient_view_search_billing" model="ir.ui.view">
+        <field name="name">lab.patient.search.billing</field>
+        <field name="model">lab.patient</field>
+        <field name="inherit_id" ref="lab_core.lab_patient_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="male" position="after">
+                <filter name="no_insurer" string="Sans mutuelle" domain="[('insurer_id', '=', False)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

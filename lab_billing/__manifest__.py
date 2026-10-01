@@ -1,6 +1,6 @@
 {
     'name': 'Labo Horizon — Facturation',
-    'version': '20.0.1.13.0',
+    'version': '20.0.1.14.0',
     'summary': 'Patients reliés aux contacts, analyses reliées aux articles, mutuelles',
     'category': 'Services',
     'author': 'OdooSkills',
@@ -12,6 +12,10 @@
         'security/ir.access.csv',
         'data/lab_analysis_price_data.xml',
         'views/lab_insurer_views.xml',
+        'views/lab_patient_views.xml',
+        'views/lab_analysis_views.xml',
+        'views/res_partner_views.xml',
+        'views/lab_request_views.xml',
     ],
     'demo': ['demo/lab_billing_demo.xml'],
 }

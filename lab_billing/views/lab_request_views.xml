@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Une mutuelle n'est pas une société en Odoo 20 (is_company calculé) : le domaine du chapitre 3
+         la laisserait parmi les prescripteurs. -->
+    <record id="lab_request_view_form_prescriber" model="ir.ui.view">
+        <field name="name">lab.request.form.prescriber</field>
+        <field name="model">lab.request</field>
+        <field name="inherit_id" ref="lab_core.lab_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="prescriber_id" position="attributes">
+                <attribute name="domain">[('is_company', '=', False), ('lab_insurer_ids', '=', False)]</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

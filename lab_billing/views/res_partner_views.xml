@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_lab" model="ir.ui.view">
+        <field name="name">res.partner.form.lab</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <page name="internal_notes" position="before">
+                <page name="lab" string="Laboratoire" groups="lab_core.group_lab_secretary"
+                      invisible="not lab_patient_ids and not lab_insurer_ids">
+                    <field name="lab_insurer_ids" readonly="1" invisible="not lab_insurer_ids">
+                        <list>
+                            <field name="coverage_rate"/>
+                        </list>
+                    </field>
+                    <field name="lab_patient_ids" readonly="1" invisible="not lab_patient_ids">
+                        <list>
+                            <field name="ref"/>
+                            <field name="name"/>
+                            <field name="insurer_id"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
