@@ -4,7 +4,8 @@ Les versions complètes des fichiers modifiés sont dans `lab_core/` ci-dessous.
 
 ## Exercice 7.1 — Annuler une demande
 
-Un cinquième état dans `STATES`, `('cancelled', 'Annulée')`, et une méthode :
+Un cinquième état dans `STATES`, `('cancelled', 'Annulée')`, sa place dans le cycle (`STATE_FROM`, section 7.7 :
+`'cancelled': ('draft', 'sampled')`, et `'cancelled'` ajouté aux origines de `'draft'`), et une méthode :
 
 ```python
 def action_cancel(self):
@@ -15,7 +16,8 @@ Le bouton « Annuler » n'est visible qu'en brouillon ou prélevée (`invisible=
 `statusbar_visible="draft,sampled,analysed,validated"` garde la barre d'état lisible : l'état « Annulée » ne s'y
 affiche que lorsqu'une demande l'atteint. « Remettre en brouillon » fonctionne aussi depuis l'état annulé.
 
-Critère : le test `test_cancel` passe ; une demande validée ne peut pas être annulée.
+Critère : le test `test_cancel` passe ; une demande validée ne peut pas être annulée, et une demande annulée revient
+en brouillon.
 
 ## Exercice 7.2 — Prévenir quand le prescripteur est retiré
 

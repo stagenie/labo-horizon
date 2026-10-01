@@ -72,11 +72,24 @@ class TestLabWorkflow(LabCoreCommon):
         req.action_reset_draft()
         self.assertEqual(req.state, 'validated')
 
+    def test_state_follows_cycle(self):
+        with self.assertRaises(UserError):
+            self._new_request('panel_bil1').write({'state': 'analysed'})   # saut d'étape
+        with self.assertRaises(UserError):
+            self._validated().write({'state': 'draft'})                     # réouverture
+
+    def test_panel_added_by_write_creates_results(self):
+        req = self._new_request('panel_bil1')
+        req.write({'panel_ids': [Command.link(self.env.ref('lab_core.panel_eal').id)]})
+        self.assertEqual(len(req.result_ids), 7)
+
     def test_cancel(self):
         req = self._new_request('panel_bil1')
         req.action_sample()
         req.action_cancel()
         self.assertEqual(req.state, 'cancelled')
+        req.action_reset_draft()
+        self.assertEqual(req.state, 'draft')
         self._validated().action_cancel()
         self.assertEqual(self._validated().state, 'validated')
 

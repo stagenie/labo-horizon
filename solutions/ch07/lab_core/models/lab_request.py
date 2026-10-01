@@ -10,6 +10,15 @@ STATES = [
     ('cancelled', 'Annulée'),
 ]
 
+# Pour chaque état d'arrivée, les états d'où une demande peut y venir.
+STATE_FROM = {
+    'draft': ('sampled', 'analysed', 'cancelled'),
+    'sampled': ('draft',),
+    'analysed': ('sampled',),
+    'validated': ('analysed',),
+    'cancelled': ('draft', 'sampled'),
+}
+
 
 class LabRequest(models.Model):
     _name = 'lab.request'
@@ -63,9 +72,16 @@ class LabRequest(models.Model):
         return requests
 
     def write(self, vals):
+        if 'state' in vals:
+            moved = self.filtered(lambda r: r.state != vals['state'])
+            if any(r.state not in STATE_FROM[vals['state']] for r in moved):
+                raise UserError(_("Ce changement d'état ne suit pas le cycle de la demande."))
         if vals.get('state') == 'validated' and not self.env.context.get('lab_validation'):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
-        return super().write(vals)
+        result = super().write(vals)
+        if 'panel_ids' in vals:
+            self._sync_results_from_panels()
+        return result
 
     @api.onchange('panel_ids')
     def _onchange_panel_ids(self):
