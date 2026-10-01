@@ -2,6 +2,8 @@
 <odoo>
     <menuitem id="menu_lab_root" name="Laboratoire" sequence="40"
               web_icon="lab_core,static/description/icon.png"/>
+    <menuitem id="menu_lab_request" name="Demandes" parent="menu_lab_root"
+              action="lab_request_action" sequence="5"/>
     <menuitem id="menu_lab_patient" name="Patients" parent="menu_lab_root"
               action="lab_patient_action" sequence="10"/>
     <menuitem id="menu_lab_config" name="Configuration" parent="menu_lab_root" sequence="90"/>

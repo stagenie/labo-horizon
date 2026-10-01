@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_request_view_list" model="ir.ui.view">
+        <field name="name">lab.request.list</field>
+        <field name="model">lab.request</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="prescriber_id"/>
+                <field name="date_request"/>
+            </list>
+        </field>
+    </record>
+    <record id="lab_request_view_form" model="ir.ui.view">
+        <field name="name">lab.request.form</field>
+        <field name="model">lab.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="patient_id"/>
+                        <field name="patient_phone"/>
+                        <field name="prescriber_id"/>
+                        <field name="collector_id"/>
+                        <field name="date_request"/>
+                    </group>
+                    <field name="note" placeholder="Renseignements cliniques transmis par le prescripteur"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="lab_request_action" model="ir.actions.act_window">
+        <field name="name">Demandes</field>
+        <field name="res_model">lab.request</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

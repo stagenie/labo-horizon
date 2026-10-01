@@ -70,4 +70,27 @@
         <field name="gender">female</field>
         <field name="email">amel.cherif@example.com</field>
     </record>
+    <record id="partner_dr_durand" model="res.partner">
+        <field name="name">Dr Claire Durand</field>
+        <field name="is_company" eval="False"/>
+        <field name="email">claire.durand@example.com</field>
+    </record>
+    <record id="partner_dr_amrani" model="res.partner">
+        <field name="name">Dr Youssef Amrani</field>
+        <field name="is_company" eval="False"/>
+        <field name="email">youssef.amrani@example.com</field>
+    </record>
+    <record id="request_demo_1" model="lab.request">
+        <field name="patient_id" ref="patient_demo_1"/>
+        <field name="prescriber_id" ref="partner_dr_durand"/>
+        <field name="note">Bilan de fatigue, à jeun depuis 12 h.</field>
+    </record>
+    <record id="request_demo_2" model="lab.request">
+        <field name="patient_id" ref="patient_demo_2"/>
+        <field name="prescriber_id" ref="partner_dr_amrani"/>
+        <field name="note">Suivi de diabète de type 2.</field>
+    </record>
+    <record id="request_demo_3" model="lab.request">
+        <field name="patient_id" ref="patient_demo_9"/>
+    </record>
 </odoo>
