@@ -13,7 +13,7 @@ def _get_blood_results(self):
 `filtered` garde les lignes pour lesquelles la fonction renvoie vrai ; la fonction suit le Many2one `analysis_id` pour
 lire le type de tube. Le test `test_blood_results` crée une demande GLY + ECBU + HB et attend `['GLY', 'HB']`.
 
-Critère : `venv/bin/python scripts/labo/check_tag.py --worktree --solutions 04` est vert.
+Critère : les tests du module passent (`--test-tags /lab_core` sur une base neuve, section 4.8 du livre).
 
 ## Exercice 4.2 — Dupliquer une demande
 
@@ -31,4 +31,4 @@ def test_copy_keeps_results_not_samples(self):
 nouveaux enregistrements, d'où le `assertNotEqual`). `sample_ids` porte `copy=False` : la copie n'a aucun tube, un tube
 ne se prélève qu'une fois.
 
-Critère : `venv/bin/python scripts/labo/check_tag.py --worktree --solutions 04` est vert.
+Critère : les tests du module passent (`--test-tags /lab_core` sur une base neuve, section 4.8 du livre).

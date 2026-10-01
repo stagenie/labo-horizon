@@ -36,3 +36,7 @@ class LabRequest(models.Model):
 
     def action_load_panels(self):
         self._sync_results_from_panels()
+
+    def action_clear_empty_results(self):
+        """ Supprime les lignes de résultat encore sans valeur. """
+        self._get_pending_results().unlink()

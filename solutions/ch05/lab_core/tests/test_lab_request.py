@@ -71,3 +71,12 @@ class TestLabRequest(LabCoreCommon):
         req._sync_results_from_panels()
         self.assertEqual(len(req.result_ids), 7)
         self.assertEqual(req.result_ids.filtered(lambda r: r.analysis_code == 'GLY').value_text, '1,02')
+
+    def test_clear_empty_results(self):
+        req = self._new_request('panel_bil1')
+        req.result_ids.filtered(lambda r: r.analysis_code == 'GLY').value_text = '1,02'
+        req.action_clear_empty_results()
+        self.assertEqual(req.result_ids.mapped('analysis_code'), ['GLY'])
+
+    def test_thyroid_panel(self):
+        self.assertEqual(self.env.ref('lab_core.panel_thy').analysis_ids.mapped('code'), ['TSH'])

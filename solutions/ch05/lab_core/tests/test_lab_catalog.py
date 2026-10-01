@@ -38,4 +38,4 @@ class TestLabCatalog(LabCoreCommon):
 
     def test_panels_data(self):
         self.assertEqual(set(self.env.ref('lab_core.panel_eal').analysis_ids.mapped('code')), {'CHOL', 'HDL', 'LDL', 'TG'})
-        self.assertEqual(self.env['lab.panel'].search_count([]), 5)
+        self.assertEqual(self.env['lab.panel'].search_count([]), 6)

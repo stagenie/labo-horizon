@@ -4,3 +4,4 @@ access_lab_analysis_user,Analyse : utilisateur interne,lab.analysis,base.group_u
 access_lab_request_user,Demande : utilisateur interne,lab.request,base.group_user,crud,
 access_lab_result_user,Résultat : utilisateur interne,lab.result,base.group_user,crud,
 access_lab_sample_user,Tube : utilisateur interne,lab.sample,base.group_user,crud,
+access_lab_panel_user,Bilan : utilisateur interne,lab.panel,base.group_user,crud,

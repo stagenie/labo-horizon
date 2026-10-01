@@ -19,6 +19,7 @@
             <form>
                 <header>
                     <button name="action_load_panels" type="object" string="Charger les analyses des bilans" class="btn-primary"/>
+                    <button name="action_clear_empty_results" type="object" string="Retirer les lignes vides"/>
                 </header>
                 <sheet>
                     <div class="oe_title">

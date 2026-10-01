@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="panel_bil1" model="lab.panel">
+        <field name="code">BIL1</field>
+        <field name="name">Bilan de base</field>
+        <field name="analysis_ids" eval="[Command.set([ref('analysis_gly'), ref('analysis_hb'), ref('analysis_crp')])]"/>
+    </record>
+    <record id="panel_eal" model="lab.panel">
+        <field name="code">EAL</field>
+        <field name="name">Bilan lipidique</field>
+        <field name="analysis_ids" eval="[Command.set([ref('analysis_chol'), ref('analysis_hdl'), ref('analysis_ldl'), ref('analysis_tg')])]"/>
+    </record>
+    <record id="panel_nfs" model="lab.panel">
+        <field name="code">NFS</field>
+        <field name="name">Numération formule sanguine</field>
+        <field name="analysis_ids" eval="[Command.set([ref('analysis_hb'), ref('analysis_gb'), ref('analysis_plq'), ref('analysis_vgm')])]"/>
+    </record>
+    <record id="panel_bhep" model="lab.panel">
+        <field name="code">BHEP</field>
+        <field name="name">Bilan hépatique</field>
+        <field name="analysis_ids" eval="[Command.set([ref('analysis_asat'), ref('analysis_alat'), ref('analysis_ggt')])]"/>
+    </record>
+    <record id="panel_bren" model="lab.panel">
+        <field name="code">BREN</field>
+        <field name="name">Bilan rénal</field>
+        <field name="analysis_ids" eval="[Command.set([ref('analysis_crea'), ref('analysis_uree'), ref('analysis_na'), ref('analysis_k')])]"/>
+    </record>
+    <record id="panel_thy" model="lab.panel">
+        <field name="code">THY</field>
+        <field name="name">Bilan thyroïdien</field>
+        <field name="analysis_ids" eval="[Command.set([ref('analysis_tsh')])]"/>
+    </record>
+</odoo>

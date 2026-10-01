@@ -90,6 +90,7 @@
         <field name="patient_id" ref="patient_demo_2"/>
         <field name="prescriber_id" ref="partner_dr_amrani"/>
         <field name="note">Suivi de diabète de type 2.</field>
+        <field name="panel_ids" eval="[Command.set([ref('panel_eal')])]"/>
     </record>
     <record id="request_demo_3" model="lab.request">
         <field name="patient_id" ref="patient_demo_9"/>

@@ -1,3 +1,4 @@
+from odoo.fields import Command
 from odoo.tests import TransactionCase
 
 
@@ -14,3 +15,11 @@ class LabCoreCommon(TransactionCase):
             'gender': 'female',
             'email': 'alice@example.com',
         })
+
+    def _new_request(self, *panels):
+        req = self.env['lab.request'].create({
+            'patient_id': self.alice.id,
+            'panel_ids': [Command.set([self.env.ref(f'lab_core.{p}').id for p in panels])],
+        })
+        req._sync_results_from_panels()
+        return req
