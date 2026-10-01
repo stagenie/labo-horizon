@@ -9,14 +9,6 @@ STATES = [
     ('validated', 'Validée'),
 ]
 
-# Pour chaque état d'arrivée, les états d'où une demande peut y venir.
-STATE_FROM = {
-    'draft': ('sampled', 'analysed'),
-    'sampled': ('draft',),
-    'analysed': ('sampled',),
-    'validated': ('analysed',),
-}
-
 
 class LabRequest(models.Model):
     _name = 'lab.request'
@@ -39,6 +31,13 @@ class LabRequest(models.Model):
     panel_ids = fields.Many2many('lab.panel', string='Bilans')
     patient_gender = fields.Selection(related='patient_id.gender')
     abnormal_count = fields.Integer('Hors normes', compute='_compute_abnormal_count', store=True)
+    can_validate = fields.Boolean(compute='_compute_can_validate')
+
+    @api.depends_context('uid')
+    def _compute_can_validate(self):
+        is_biologist = self.env.user.has_group('lab_core.group_lab_biologist')
+        for request in self:
+            request.can_validate = is_biologist
 
     @api.depends('result_ids.flag')
     def _compute_abnormal_count(self):
@@ -66,7 +65,6 @@ class LabRequest(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals['state'] = 'draft'   # toute demande commence en brouillon, même créée depuis une colonne du kanban
             if vals.get('name', 'Nouvelle') == 'Nouvelle':
                 vals['name'] = self.env['ir.sequence'].next_by_code('lab.request')
         requests = super().create(vals_list)
@@ -74,16 +72,9 @@ class LabRequest(models.Model):
         return requests
 
     def write(self, vals):
-        if 'state' in vals:
-            moved = self.filtered(lambda r: r.state != vals['state'])
-            if any(r.state not in STATE_FROM[vals['state']] for r in moved):
-                raise UserError(_("Ce changement d'état ne suit pas le cycle de la demande."))
         if vals.get('state') == 'validated' and not self.env.context.get('lab_validation'):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
-        result = super().write(vals)
-        if 'panel_ids' in vals:
-            self._sync_results_from_panels()
-        return result
+        return super().write(vals)
 
     def _schedule_validation_activity(self):
         biologist = self.env.ref('lab_core.group_lab_biologist').user_ids.filtered(lambda u: not u.share)[:1]

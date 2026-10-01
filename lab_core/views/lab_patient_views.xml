@@ -12,6 +12,7 @@
                 <field name="phone"/>
                 <field name="gender"/>
                 <field name="email"/>
+                <field name="is_confidential" groups="lab_core.group_lab_biologist"/>
             </list>
         </field>
     </record>
@@ -34,6 +35,7 @@
                         <group>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
+                            <field name="is_confidential" groups="lab_core.group_lab_biologist"/>
                         </group>
                     </group>
                     <notebook>

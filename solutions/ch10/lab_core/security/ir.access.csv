@@ -12,3 +12,4 @@ access_lab_result_technician,Résultat : technicien,lab.result,lab_core.group_la
 access_lab_result_biologist,Résultat : biologiste,lab.result,lab_core.group_lab_biologist,crud,
 access_lab_sample_secretary,Tube : secrétariat,lab.sample,lab_core.group_lab_secretary,cru,"[('request_id', 'access', 'read')]"
 access_lab_sample_biologist,Tube : biologiste,lab.sample,lab_core.group_lab_biologist,crud,
+restrict_lab_request_validated_delete,Demande validée : jamais supprimée,lab.request,,d,"[('state', '!=', 'validated')]"

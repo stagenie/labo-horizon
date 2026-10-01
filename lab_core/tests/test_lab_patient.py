@@ -24,7 +24,7 @@ class TestLabPatient(LabCoreCommon):
         self.assertEqual((action.res_model, action.view_mode), ('lab.patient', 'list,form'))
 
     def test_internal_user_has_access(self):
-        user = new_test_user(self.env, 'lab_internal', groups='base.group_user')
+        user = new_test_user(self.env, 'lab_internal', groups='lab_core.group_lab_secretary')
         self.Patient.with_user(user).create({'name': 'Bob Leroy'})
 
     def test_portal_user_has_no_access(self):

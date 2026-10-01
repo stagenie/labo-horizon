@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_lab" model="res.groups.privilege">
+        <field name="name">Laboratoire</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="base.module_category_services"/>
+    </record>
+    <record id="group_lab_secretary" model="res.groups">
+        <field name="name">Secrétaire</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_lab"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="group_lab_technician" model="res.groups">
+        <field name="name">Technicien</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_lab"/>
+        <field name="implied_ids" eval="[(4, ref('group_lab_secretary'))]"/>
+    </record>
+    <record id="group_lab_biologist" model="res.groups">
+        <field name="name">Biologiste</field>
+        <field name="sequence">30</field>
+        <field name="privilege_id" ref="res_groups_privilege_lab"/>
+        <field name="implied_ids" eval="[(4, ref('group_lab_technician'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

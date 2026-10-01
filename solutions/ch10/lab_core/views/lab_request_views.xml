@@ -25,7 +25,8 @@
                     <button name="action_analyse" type="object" string="Terminer l'analyse" class="btn-primary"
                             invisible="state != 'sampled'" groups="lab_core.group_lab_technician"/>
                     <button name="action_validate" type="object" string="Valider" class="btn-primary"
-                            invisible="state != 'analysed'" groups="lab_core.group_lab_biologist"/>
+                            invisible="state != 'analysed' or not can_validate"/>
+                    <field name="can_validate" invisible="1"/>
                     <button name="action_reset_draft" type="object" string="Remettre en brouillon"
                             invisible="state in ('draft', 'validated')" groups="lab_core.group_lab_biologist"/>
                     <field name="state" widget="statusbar"/>
@@ -74,7 +75,7 @@
         <field name="name">lab.request.kanban</field>
         <field name="model">lab.request</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state" records_draggable="0">
+            <kanban default_group_by="state">
                 <templates>
                     <t t-name="card">
                         <field name="name" class="fw-bold"/>

@@ -15,6 +15,7 @@ class LabPatient(models.Model):
     phone = fields.Char('Téléphone', tracking=True)
     gender = fields.Selection([('female', 'Femme'), ('male', 'Homme')], 'Sexe')
     email = fields.Char('E-mail', tracking=True)
+    is_confidential = fields.Boolean('Dossier confidentiel', tracking=True)
     notes = fields.Html('Notes internes', help="Informations utiles à l'accueil ; jamais transmises au patient.")
     request_ids = fields.One2many('lab.request', 'patient_id', 'Demandes')
     age = fields.Integer('Âge', compute='_compute_age')
