@@ -4,4 +4,7 @@
               web_icon="lab_core,static/description/icon.png"/>
     <menuitem id="menu_lab_patient" name="Patients" parent="menu_lab_root"
               action="lab_patient_action" sequence="10"/>
+    <menuitem id="menu_lab_config" name="Configuration" parent="menu_lab_root" sequence="90"/>
+    <menuitem id="menu_lab_analysis" name="Analyses" parent="menu_lab_config"
+              action="lab_analysis_action" sequence="10"/>
 </odoo>

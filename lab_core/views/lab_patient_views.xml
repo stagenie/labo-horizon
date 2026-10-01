@@ -8,6 +8,8 @@
                 <field name="name"/>
                 <field name="birthdate"/>
                 <field name="phone"/>
+                <field name="gender"/>
+                <field name="email"/>
             </list>
         </field>
     </record>
@@ -21,9 +23,20 @@
                         <h1><field name="name" placeholder="Nom du patient"/></h1>
                     </div>
                     <group>
-                        <field name="birthdate"/>
-                        <field name="phone" widget="phone"/>
+                        <group>
+                            <field name="birthdate"/>
+                            <field name="gender" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                        </group>
                     </group>
+                    <notebook>
+                        <page name="notes" string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

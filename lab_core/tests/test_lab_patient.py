@@ -27,3 +27,8 @@ class TestLabPatient(LabCoreCommon):
         portal = new_test_user(self.env, 'lab_portal_user', groups='base.group_portal')
         with self.assertRaises(AccessError):
             self.Patient.with_user(portal).search([])
+
+    def test_notes_html_is_sanitized(self):
+        self.alice.notes = '<p>Allergie au latex</p><script>alert(1)</script>'
+        self.assertIn('Allergie au latex', self.alice.notes)
+        self.assertNotIn('<script', self.alice.notes)

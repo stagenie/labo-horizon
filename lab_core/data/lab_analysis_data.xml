@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="analysis_gly" model="lab.analysis">
+        <field name="code">GLY</field>
+        <field name="name">Glycémie à jeun</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">0.70</field>
+        <field name="ref_max">1.10</field>
+    </record>
+    <record id="analysis_hba1c" model="lab.analysis">
+        <field name="code">HBA1C</field>
+        <field name="name">Hémoglobine glyquée</field>
+        <field name="unit">%</field>
+        <field name="ref_min">4.00</field>
+        <field name="ref_max">6.00</field>
+    </record>
+    <record id="analysis_chol" model="lab.analysis">
+        <field name="code">CHOL</field>
+        <field name="name">Cholestérol total</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">1.50</field>
+        <field name="ref_max">2.00</field>
+    </record>
+    <record id="analysis_hdl" model="lab.analysis">
+        <field name="code">HDL</field>
+        <field name="name">Cholestérol HDL</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">0.40</field>
+        <field name="ref_max">0.80</field>
+        <field name="ref_min_female">0.50</field>
+        <field name="ref_max_female">0.90</field>
+    </record>
+    <record id="analysis_ldl" model="lab.analysis">
+        <field name="code">LDL</field>
+        <field name="name">Cholestérol LDL</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">1.60</field>
+    </record>
+    <record id="analysis_tg" model="lab.analysis">
+        <field name="code">TG</field>
+        <field name="name">Triglycérides</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">0.35</field>
+        <field name="ref_max">1.50</field>
+    </record>
+    <record id="analysis_crea" model="lab.analysis">
+        <field name="code">CREA</field>
+        <field name="name">Créatinine</field>
+        <field name="unit">mg/L</field>
+        <field name="ref_min">7</field>
+        <field name="ref_max">12</field>
+        <field name="ref_min_female">5</field>
+        <field name="ref_max_female">10</field>
+    </record>
+    <record id="analysis_uree" model="lab.analysis">
+        <field name="code">UREE</field>
+        <field name="name">Urée</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">0.15</field>
+        <field name="ref_max">0.45</field>
+    </record>
+    <record id="analysis_asat" model="lab.analysis">
+        <field name="code">ASAT</field>
+        <field name="name">Aspartate aminotransférase</field>
+        <field name="unit">UI/L</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">40</field>
+        <field name="ref_min_female">0</field>
+        <field name="ref_max_female">35</field>
+    </record>
+    <record id="analysis_alat" model="lab.analysis">
+        <field name="code">ALAT</field>
+        <field name="name">Alanine aminotransférase</field>
+        <field name="unit">UI/L</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">45</field>
+        <field name="ref_min_female">0</field>
+        <field name="ref_max_female">35</field>
+    </record>
+    <record id="analysis_ggt" model="lab.analysis">
+        <field name="code">GGT</field>
+        <field name="name">Gamma-glutamyl transférase</field>
+        <field name="unit">UI/L</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">55</field>
+        <field name="ref_min_female">0</field>
+        <field name="ref_max_female">38</field>
+    </record>
+    <record id="analysis_crp" model="lab.analysis">
+        <field name="code">CRP</field>
+        <field name="name">Protéine C réactive</field>
+        <field name="unit">mg/L</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">5</field>
+    </record>
+    <record id="analysis_tsh" model="lab.analysis">
+        <field name="code">TSH</field>
+        <field name="name">Thyréostimuline</field>
+        <field name="unit">mUI/L</field>
+        <field name="ref_min">0.40</field>
+        <field name="ref_max">4.00</field>
+    </record>
+    <record id="analysis_fer" model="lab.analysis">
+        <field name="code">FER</field>
+        <field name="name">Fer sérique</field>
+        <field name="unit">µmol/L</field>
+        <field name="ref_min">11</field>
+        <field name="ref_max">30</field>
+        <field name="ref_min_female">9</field>
+        <field name="ref_max_female">27</field>
+    </record>
+    <record id="analysis_ferri" model="lab.analysis">
+        <field name="code">FERRI</field>
+        <field name="name">Ferritine</field>
+        <field name="unit">µg/L</field>
+        <field name="ref_min">30</field>
+        <field name="ref_max">400</field>
+        <field name="ref_min_female">15</field>
+        <field name="ref_max_female">150</field>
+    </record>
+    <record id="analysis_hb" model="lab.analysis">
+        <field name="code">HB</field>
+        <field name="name">Hémoglobine</field>
+        <field name="unit">g/dL</field>
+        <field name="ref_min">13</field>
+        <field name="ref_max">17</field>
+        <field name="ref_min_female">12</field>
+        <field name="ref_max_female">16</field>
+    </record>
+    <record id="analysis_gb" model="lab.analysis">
+        <field name="code">GB</field>
+        <field name="name">Leucocytes</field>
+        <field name="unit">G/L</field>
+        <field name="ref_min">4</field>
+        <field name="ref_max">10</field>
+    </record>
+    <record id="analysis_plq" model="lab.analysis">
+        <field name="code">PLQ</field>
+        <field name="name">Plaquettes</field>
+        <field name="unit">G/L</field>
+        <field name="ref_min">150</field>
+        <field name="ref_max">400</field>
+    </record>
+    <record id="analysis_vgm" model="lab.analysis">
+        <field name="code">VGM</field>
+        <field name="name">Volume globulaire moyen</field>
+        <field name="unit">fL</field>
+        <field name="ref_min">80</field>
+        <field name="ref_max">100</field>
+    </record>
+    <record id="analysis_na" model="lab.analysis">
+        <field name="code">NA</field>
+        <field name="name">Sodium</field>
+        <field name="unit">mmol/L</field>
+        <field name="ref_min">135</field>
+        <field name="ref_max">145</field>
+    </record>
+    <record id="analysis_k" model="lab.analysis">
+        <field name="code">K</field>
+        <field name="name">Potassium</field>
+        <field name="unit">mmol/L</field>
+        <field name="ref_min">3.5</field>
+        <field name="ref_max">5.0</field>
+    </record>
+    <record id="analysis_ca" model="lab.analysis">
+        <field name="code">CA</field>
+        <field name="name">Calcium</field>
+        <field name="unit">mmol/L</field>
+        <field name="ref_min">2.20</field>
+        <field name="ref_max">2.60</field>
+    </record>
+    <record id="analysis_vitd" model="lab.analysis">
+        <field name="code">VITD</field>
+        <field name="name">Vitamine D (25-OH)</field>
+        <field name="unit">ng/mL</field>
+        <field name="ref_min">30</field>
+        <field name="ref_max">100</field>
+    </record>
+    <record id="analysis_psa" model="lab.analysis">
+        <field name="code">PSA</field>
+        <field name="name">Antigène prostatique spécifique</field>
+        <field name="unit">ng/mL</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">4</field>
+    </record>
+    <record id="analysis_tp" model="lab.analysis">
+        <field name="code">TP</field>
+        <field name="name">Taux de prothrombine</field>
+        <field name="unit">%</field>
+        <field name="ref_min">70</field>
+        <field name="ref_max">100</field>
+    </record>
+    <record id="analysis_inr" model="lab.analysis">
+        <field name="code">INR</field>
+        <field name="name">International Normalized Ratio</field>
+        <field name="ref_min">0.8</field>
+        <field name="ref_max">1.2</field>
+    </record>
+    <record id="analysis_acu" model="lab.analysis">
+        <field name="code">ACU</field>
+        <field name="name">Acide urique</field>
+        <field name="unit">mg/L</field>
+        <field name="ref_min">35</field>
+        <field name="ref_max">70</field>
+        <field name="ref_min_female">25</field>
+        <field name="ref_max_female">60</field>
+    </record>
+    <record id="analysis_mg" model="lab.analysis">
+        <field name="code">MG</field>
+        <field name="name">Magnésium</field>
+        <field name="unit">mmol/L</field>
+        <field name="ref_min">0.70</field>
+        <field name="ref_max">1.00</field>
+    </record>
+    <record id="analysis_uprot" model="lab.analysis">
+        <field name="code">UPROT</field>
+        <field name="name">Protéinurie</field>
+        <field name="sample_type">urine</field>
+        <field name="unit">g/L</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">0.15</field>
+    </record>
+    <record id="analysis_ecbu" model="lab.analysis">
+        <field name="code">ECBU</field>
+        <field name="name">Examen cytobactériologique des urines</field>
+        <field name="sample_type">urine</field>
+        <field name="ref_min">0</field>
+        <field name="ref_max">0</field>
+    </record>
+</odoo>
