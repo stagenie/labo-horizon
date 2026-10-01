@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_result_entry_view_form" model="ir.ui.view">
+        <field name="name">lab.result.entry.form</field>
+        <field name="model">lab.result.entry</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="request_id"/>
+                <field name="line_ids">
+                    <list editable="bottom" create="0" delete="0">
+                        <field name="analysis_id"/><field name="value_text"/><field name="unit"/>
+                    </list>
+                </field>
+                <field name="comment" placeholder="Remarque de la paillasse, publiée sur la demande"/>
+                <footer>
+                    <button name="action_apply" type="object" string="Enregistrer et terminer" class="btn-primary"/>
+                    <button special="cancel" string="Annuler"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

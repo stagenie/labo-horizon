@@ -5,3 +5,4 @@ from . import test_lab_workflow
 from . import test_lab_chatter
 from . import test_lab_views
 from . import test_lab_security
+from . import test_lab_wizard

@@ -22,6 +22,8 @@
                 <header>
                     <button name="action_sample" type="object" string="Prélever" class="btn-primary" invisible="state != 'draft'"
                             groups="lab_core.group_lab_technician"/>
+                    <button name="action_open_result_entry" type="object" string="Saisir les résultats"
+                            invisible="state != 'sampled'" groups="lab_core.group_lab_technician"/>
                     <button name="action_analyse" type="object" string="Terminer l'analyse" class="btn-primary"
                             invisible="state != 'sampled'" groups="lab_core.group_lab_technician"/>
                     <button name="action_validate" type="object" string="Valider" class="btn-primary"

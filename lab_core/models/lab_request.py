@@ -138,6 +138,22 @@ class LabRequest(models.Model):
         to_validate.activity_feedback(['mail.mail_activity_data_todo'])
         return True
 
+    def action_open_result_entry(self):
+        self.ensure_one()
+        entry = self.env['lab.result.entry'].create({
+            'request_id': self.id,
+            'line_ids': [Command.create({'result_id': r.id, 'value_text': r.value_text})
+                         for r in self.result_ids],
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Saisie des résultats"),
+            'res_model': 'lab.result.entry',
+            'res_id': entry.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
     def action_reset_draft(self):
         if not self.env.user.has_group('lab_core.group_lab_biologist'):
             raise AccessError(_("Seul un biologiste peut remettre une demande en brouillon."))
