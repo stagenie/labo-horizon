@@ -7,6 +7,7 @@ STATES = [
     ('sampled', 'Prélevée'),
     ('analysed', 'Analysée'),
     ('validated', 'Validée'),
+    ('cancelled', 'Annulée'),
 ]
 
 
@@ -103,3 +104,14 @@ class LabRequest(models.Model):
         todo = self.filtered(lambda r: r.state != 'validated')
         todo.write({'state': 'draft'})
         todo.sample_ids.unlink()
+
+    def action_cancel(self):
+        self.filtered(lambda r: r.state in ('draft', 'sampled')).write({'state': 'cancelled'})
+
+    @api.onchange('prescriber_id')
+    def _onchange_prescriber_id(self):
+        if not self.prescriber_id and self._origin.prescriber_id:
+            return {'warning': {
+                'title': _("Prescripteur retiré"),
+                'message': _("Une demande sans prescripteur ne pourra pas être remboursée."),
+            }}

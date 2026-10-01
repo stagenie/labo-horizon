@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_lab_patient" model="ir.sequence">
+        <field name="name">Patient</field>
+        <field name="code">lab.patient</field>
+        <field name="prefix">PAT-</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_lab_request" model="ir.sequence">
+        <field name="name">Demande d'analyses</field>
+        <field name="code">lab.request</field>
+        <field name="prefix">DEM/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_lab_sample" model="ir.sequence">
+        <field name="name">Tube</field>
+        <field name="code">lab.sample</field>
+        <field name="prefix">TUB</field>
+        <field name="padding">7</field>
+    </record>
+</odoo>

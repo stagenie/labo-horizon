@@ -1,6 +1,7 @@
 import re
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 FLAGS = [
     ('pending', 'En attente'),
@@ -26,6 +27,11 @@ class LabResult(models.Model):
     range_min = fields.Float('Min', compute='_compute_value_flag', store=True, digits=(10, 2))
     range_max = fields.Float('Max', compute='_compute_value_flag', store=True, digits=(10, 2))
     flag = fields.Selection(FLAGS, 'Interprétation', compute='_compute_value_flag', store=True)
+
+    def write(self, vals):
+        if 'value_text' in vals and any(r.request_id.state == 'validated' for r in self):
+            raise UserError(_("Ce résultat a été validé par le biologiste : il ne peut plus être modifié."))
+        return super().write(vals)
 
     @api.depends('value_text', 'analysis_id.ref_min', 'analysis_id.ref_max',
                  'analysis_id.ref_min_female', 'analysis_id.ref_max_female',

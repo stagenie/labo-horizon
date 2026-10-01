@@ -9,6 +9,7 @@ class LabPatient(models.Model):
     _order = 'name'
 
     name = fields.Char('Nom', required=True)
+    ref = fields.Char('Référence', readonly=True, copy=False, index=True)
     birthdate = fields.Date('Date de naissance')
     phone = fields.Char('Téléphone')
     gender = fields.Selection([('female', 'Femme'), ('male', 'Homme')], 'Sexe')
@@ -22,3 +23,18 @@ class LabPatient(models.Model):
         today = fields.Date.context_today(self)
         for patient in self:
             patient.age = relativedelta(today, patient.birthdate).years if patient.birthdate else 0
+
+    _ref_uniq = models.Constraint('UNIQUE (ref)', "Cette référence patient existe déjà.")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('ref'):
+                vals['ref'] = self.env['ir.sequence'].next_by_code('lab.patient')
+        return super().create(vals_list)
+
+    @api.model
+    def _assign_missing_refs(self):
+        """ Numérote les patients créés avant l'arrivée de la séquence (bases des chapitres 1 à 6). """
+        for patient in self.search([('ref', '=', False)]):
+            patient.ref = self.env['ir.sequence'].next_by_code('lab.patient')

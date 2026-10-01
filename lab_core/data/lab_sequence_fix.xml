@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="lab.patient" name="_assign_missing_refs"/>
+    <function model="lab.request" name="_assign_missing_names"/>
+    <function model="lab.sample" name="_assign_missing_barcodes"/>
+</odoo>

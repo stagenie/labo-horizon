@@ -14,7 +14,7 @@ class TestLabRequest(LabCoreCommon):
         doctor = self.env['res.partner'].create({'name': 'Dr Test'})
         req = self.env['lab.request'].create({'patient_id': self.alice.id, 'prescriber_id': doctor.id})
         self.assertEqual(req.patient_id.name, 'Alice Martin')
-        self.assertEqual(req.name, 'Nouvelle')
+        self.assertTrue(req.name.startswith('DEM/'))
         self.assertTrue(req.date_request)
 
     def test_patient_with_request_cannot_be_deleted(self):

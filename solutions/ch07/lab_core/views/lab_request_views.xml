@@ -27,7 +27,9 @@
                             invisible="state != 'analysed'"/>
                     <button name="action_reset_draft" type="object" string="Remettre en brouillon"
                             invisible="state in ('draft', 'validated')"/>
-                    <field name="state" widget="statusbar"/>
+                    <button name="action_cancel" type="object" string="Annuler"
+                            invisible="state not in ('draft', 'sampled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sampled,analysed,validated"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
