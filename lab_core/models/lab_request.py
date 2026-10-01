@@ -82,6 +82,8 @@ class LabRequest(models.Model):
             raise UserError(_("Une demande ne se valide que par le bouton Valider."))
         if vals.get('state') in ('sampled', 'analysed') and not self.env.user.has_group('lab_core.group_lab_technician'):
             raise AccessError(_("Seul le personnel technique fait avancer une demande."))
+        if vals.get('state') == 'draft' and not self.env.user.has_group('lab_core.group_lab_biologist'):
+            raise AccessError(_("Seul un biologiste peut remettre une demande en brouillon."))
         result = super().write(vals)
         if 'panel_ids' in vals:
             self._sync_results_from_panels()

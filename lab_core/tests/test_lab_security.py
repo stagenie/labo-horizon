@@ -77,3 +77,9 @@ class TestLabSecurity(LabCoreCommon):
     def test_secretary_cannot_move_request_forward(self):
         with self.assertRaises(AccessError):
             self.request.with_user(self.secretary).write({'state': 'sampled'})
+
+    def test_only_biologist_moves_request_back_to_draft(self):
+        req = self.request
+        req.action_sample()
+        with self.assertRaises(AccessError):
+            req.with_user(self.technician).write({'state': 'draft'})
