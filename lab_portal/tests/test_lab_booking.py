@@ -94,3 +94,9 @@ class TestLabBooking(HttpCase):
         secretary = new_test_user(self.env, 'secretaire_rdv', groups='lab_core.group_lab_secretary')
         found = self.env['calendar.event'].with_user(secretary).search([('lab_booking', '=', True), ('start', '=', start)])
         self.assertEqual(found.lab_contact_email, 'nina@example.com')
+
+    def test_booking_list_labels(self):
+        arch = self.env['calendar.event'].get_views([(self.env.ref('lab_portal.calendar_event_view_list_lab').id, 'list')])
+        arch = arch['views']['list']['arch']
+        self.assertIn('string="Début"', arch)
+        self.assertIn('string="Rendez-vous"', arch)

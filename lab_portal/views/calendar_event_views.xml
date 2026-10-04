@@ -6,8 +6,8 @@
         <field name="priority">40</field>
         <field name="arch" type="xml">
             <list create="false">
-                <field name="start"/>
-                <field name="name"/>
+                <field name="start" string="Début"/>
+                <field name="name" string="Rendez-vous"/>
                 <field name="lab_contact_phone"/>
                 <field name="lab_contact_email"/>
             </list>
