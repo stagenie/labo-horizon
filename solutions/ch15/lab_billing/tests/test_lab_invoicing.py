@@ -91,6 +91,22 @@ class TestLabInvoicing(AccountTestInvoicingCommon):
         self.assertEqual(request.billing_state, 'to_invoice')
         self.assertEqual(len(request._create_invoices()), 2)
 
+    def test_credit_note_allows_reinvoicing(self):
+        request = self._validated_request()
+        moves = request._create_invoices()
+        moves.action_post()
+        moves._reverse_moves(cancel=True)   # avoir total, lettré avec la facture
+        self.assertEqual(set(moves.mapped('payment_state')), {'reversed'})
+        self.assertEqual(request.billing_state, 'to_invoice')
+        self.assertEqual(len(request._create_invoices()), 2)
+
+    def test_confidential_patient_not_invoiced(self):
+        self.patient.is_confidential = True
+        request = self._validated_request()
+        with self.assertRaisesRegex(UserError, 'confidentiel'):
+            request._create_invoices()
+        self.assertFalse(self.patient.partner_id)
+
     def test_billing_state_follows_payment(self):
         request = self._validated_request()
         moves = request._create_invoices()

@@ -26,7 +26,7 @@ class LabRequest(models.Model):
     @api.depends('state', 'invoice_ids.state', 'invoice_ids.payment_state')
     def _compute_billing_state(self):
         for request in self:
-            moves = request.invoice_ids.filtered(lambda m: m.state != 'cancel')
+            moves = request._active_invoices()
             if request.state != 'validated':
                 request.billing_state = False
             elif not moves:
@@ -35,6 +35,10 @@ class LabRequest(models.Model):
                 request.billing_state = 'paid'
             else:
                 request.billing_state = 'invoiced'
+
+    def _active_invoices(self):
+        """Factures qui comptent : ni annulées, ni extournées par un avoir."""
+        return self.invoice_ids.filtered(lambda m: m.state != 'cancel' and m.payment_state != 'reversed')
 
     def _billable_analyses(self):
         """Analyses réalisées. Le secrétariat facture sans lire les résultats (Ch.10) : la lecture
@@ -72,7 +76,9 @@ class LabRequest(models.Model):
         for request in self:
             if request.state != 'validated':
                 raise UserError(_("%s : seule une demande validée peut être facturée.", request.name))
-            if request.invoice_ids.filtered(lambda m: m.state != 'cancel'):
+            if request.patient_id.is_confidential:
+                raise UserError(_("%s : un dossier confidentiel ne se facture pas dans Odoo.", request.name))
+            if request._active_invoices():
                 raise UserError(_("%s : cette demande est déjà facturée.", request.name))
             analyses = request._billable_analyses()
             if not analyses:
