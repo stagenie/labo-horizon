@@ -1,3 +1,5 @@
 id,name,model_id,group_id/id,operation,domain
 access_lab_request_portal,Demande : patient (portail),lab.request,base.group_portal,r,"[('patient_id.partner_id', '=', user.partner_id.id), ('patient_id.is_confidential', '=', False), ('state', '=', 'validated')]"
 access_lab_result_portal,Résultat : patient (portail),lab.result,base.group_portal,r,"[('request_id', 'access', 'read')]"
+access_lab_slot_secretary,Plage : secrétariat,lab.slot,lab_core.group_lab_secretary,r,
+access_lab_slot_biologist,Plage : biologiste,lab.slot,lab_core.group_lab_biologist,crud,

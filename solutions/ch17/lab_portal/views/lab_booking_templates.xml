@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="booking_form" name="Prise de rendez-vous">
+        <t t-call="website.layout">
+            <div class="container my-5" style="max-width: 640px;">
+                <h1>Prendre rendez-vous pour un prélèvement</h1>
+                <div t-if="error" class="alert alert-warning" role="alert" t-out="error"/>
+                <p t-if="not choices">Aucun créneau libre cette semaine.</p>
+                <form t-if="choices" action="/rdv/confirmer" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <label class="form-label" for="slot">Créneau</label>
+                    <select class="form-select mb-3" name="slot" id="slot" required="required">
+                        <option t-foreach="choices" t-as="c" t-att-value="c[0]" t-out="c[1]"/>
+                    </select>
+                    <label class="form-label" for="name">Nom et prénom</label>
+                    <input class="form-control mb-3" name="name" id="name" required="required" t-att-value="values.get('name')"/>
+                    <label class="form-label" for="phone">Téléphone</label>
+                    <input class="form-control mb-3" name="phone" id="phone" type="tel" required="required" t-att-value="values.get('phone')"/>
+                    <label class="form-label" for="email">E-mail</label>
+                    <input class="form-control mb-3" name="email" id="email" type="email" required="required" t-att-value="values.get('email')"/>
+                    <label class="form-label" for="comment">Commentaire (facultatif)</label>
+                    <textarea class="form-control mb-3" name="comment" id="comment" rows="2" t-out="values.get('comment')"/>
+                    <button class="btn btn-primary" type="submit">Confirmer le rendez-vous</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="booking_done" name="Rendez-vous confirmé">
+        <t t-call="website.layout">
+            <div class="container my-5" style="max-width: 640px;">
+                <h1>Rendez-vous confirmé</h1>
+                <p>Votre prélèvement est prévu <t t-out="request.env['lab.slot']._format_local(event.start)"/>.</p>
+                <p>Venez avec votre ordonnance. Pour un bilan sanguin, venez à jeun depuis 12 heures.</p>
+            </div>
+        </t>
+    </template>
+</odoo>

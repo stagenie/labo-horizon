@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_slot_view_list" model="ir.ui.view">
+        <field name="name">lab.slot.list</field>
+        <field name="model">lab.slot</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="weekday"/>
+                <field name="hour_from" widget="float_time"/>
+                <field name="hour_to" widget="float_time"/>
+                <field name="duration" widget="float_time"/>
+            </list>
+        </field>
+    </record>
+    <record id="lab_slot_action" model="ir.actions.act_window">
+        <field name="name">Plages de prélèvement</field>
+        <field name="res_model">lab.slot</field>
+        <field name="view_mode">list</field>
+    </record>
+    <menuitem id="menu_lab_slot" name="Plages de prélèvement" parent="lab_core.menu_lab_config"
+              action="lab_slot_action" sequence="40"/>
+</odoo>
