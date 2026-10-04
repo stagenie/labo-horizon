@@ -17,8 +17,10 @@ class LabRequest(models.Model):
 
     @api.model
     def _lab_portal_domain(self):
-        """Les demandes de « Mes résultats » : celles du patient connecté, une fois validées.
+        """Les demandes de « Mes résultats » : celles du patient connecté, une fois validées, tant que
+        son dossier n'est pas confidentiel.
         Le patient du portail ne lit pas les fiches patients : la lecture privilégiée se limite
         à retrouver les identifiants de ses propres fiches."""
-        patients = self.env['lab.patient'].sudo().search([('partner_id', '=', self.env.user.partner_id.id)])
+        patients = self.env['lab.patient'].sudo().search([('partner_id', '=', self.env.user.partner_id.id),
+                                                        ('is_confidential', '=', False)])
         return [('patient_id', 'in', patients.ids), ('state', '=', 'validated')]

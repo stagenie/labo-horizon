@@ -96,6 +96,16 @@ class TestLabPortal(HttpCase):
         pdf = self.url_open(f'/my/results/{self.req_b.id}/pdf', allow_redirects=False)
         self.assertNotEqual(pdf.headers.get('Content-Type'), 'application/pdf')
 
+    def test_confidential_after_access_hides_results(self):
+        self.pa.is_confidential = True                     # dossier devenu confidentiel après l'ouverture du portail
+        self.assertFalse(self.env['lab.request'].with_user(self.user_a).search([]))
+        self.authenticate(self.user_a.login, 'patient_a_pwd')
+        self.assertNotIn(self.req_a.name, self.url_open('/my/results').text)
+        res = self.url_open(f'/my/results/{self.req_a.id}', allow_redirects=False)
+        self.assertIn(res.status_code, (302, 303))
+        pdf = self.url_open(f'/my/results/{self.req_a.id}/pdf', allow_redirects=False)
+        self.assertNotEqual(pdf.headers.get('Content-Type'), 'application/pdf')
+
     def test_portal_record_rule(self):
         self.assertEqual(self.env['lab.request'].with_user(self.user_a).search([]), self.req_a)
 
