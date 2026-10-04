@@ -5,7 +5,7 @@
         <field name="model">calendar.event</field>
         <field name="priority">40</field>
         <field name="arch" type="xml">
-            <list create="false">
+            <list create="false" default_order="start">
                 <field name="start" string="Début"/>
                 <field name="name" string="Rendez-vous"/>
                 <field name="lab_contact_phone"/>

@@ -101,6 +101,11 @@ class TestLabBooking(HttpCase):
         self.assertIn('string="Début"', arch)
         self.assertIn('string="Rendez-vous"', arch)
 
+    def test_booking_list_in_day_order(self):
+        # calendar.event est trié « start desc » : l'accueil lit la journée dans l'ordre
+        arch = self.env['calendar.event'].get_views([(self.env.ref('lab_portal.calendar_event_view_list_lab').id, 'list')])
+        self.assertIn('default_order="start"', arch['views']['list']['arch'])
+
     def test_booking_keeps_comment(self):
         start = self._monday_slots()[5]
         self._post(slot=start.strftime('%Y-%m-%d %H:%M:%S'), name='Léo Faure', phone='+33600000037',
