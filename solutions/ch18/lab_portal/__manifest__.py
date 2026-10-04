@@ -19,5 +19,6 @@
         'views/lab_slot_views.xml',
         'views/calendar_event_views.xml',
         'views/lab_booking_templates.xml',
+        'views/lab_request_views.xml',
     ],
 }

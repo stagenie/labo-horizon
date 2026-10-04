@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Exercice 18.2 -->
+    <record id="lab_request_view_form_portal" model="ir.ui.view">
+        <field name="name">lab.request.form.portal</field>
+        <field name="model">lab.request</field>
+        <field name="inherit_id" ref="lab_core.lab_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <button name="action_resend_results_mail" type="object" string="Renvoyer l'e-mail des résultats"
+                        invisible="state != 'validated'" groups="lab_core.group_lab_secretary"/>
+            </field>
+        </field>
+    </record>
+</odoo>

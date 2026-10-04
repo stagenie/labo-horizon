@@ -16,3 +16,8 @@ class LabPatient(models.Model):
         if partner.email != self.email:     # contact créé à la facture, e-mail saisi ou corrigé depuis
             partner.email = self.email
         return self.env['portal.wizard'].with_context(default_partner_ids=partner.ids).action_open_wizard()
+
+    def _has_portal_access(self):
+        """Le patient a un compte portail actif : le lien d'un courriel lui sert à quelque chose."""
+        self.ensure_one()
+        return any(user._is_portal() for user in self.partner_id.user_ids)

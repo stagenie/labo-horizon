@@ -1,4 +1,9 @@
-from odoo import fields, models
+from datetime import datetime, time, timedelta
+from zoneinfo import ZoneInfo
+
+from odoo import api, fields, models
+
+from .lab_slot import LAB_TZ
 
 
 class CalendarEvent(models.Model):
@@ -8,6 +13,33 @@ class CalendarEvent(models.Model):
     lab_contact_name = fields.Char('Patient', groups='lab_core.group_lab_secretary')
     lab_contact_phone = fields.Char('Téléphone du patient', groups='lab_core.group_lab_secretary')
     lab_contact_email = fields.Char('E-mail du patient', groups='lab_core.group_lab_secretary')
+    lab_reminder_sent = fields.Boolean('Rappel envoyé', copy=False)
 
     _lab_booking_start_uniq = models.UniqueIndex(
         "(start) WHERE lab_booking IS TRUE AND active IS TRUE", "Ce créneau est déjà réservé.")
+
+    def lab_display_start(self):
+        """Heure locale du rendez-vous pour les courriels. get_display_time_tz() ne convient pas :
+        l'heure y est formatée dans le fuseau de l'utilisateur, pas dans celui demandé."""
+        self.ensure_one()
+        local = self.start.replace(tzinfo=ZoneInfo('UTC')).astimezone(ZoneInfo(LAB_TZ))
+        return local.strftime('%d/%m/%Y à %H:%M')
+
+    @api.model
+    def _cron_lab_remind_tomorrow(self):
+        """Rappel des rendez-vous de demain (heure de Paris), une seule fois par rendez-vous."""
+        zone = ZoneInfo(LAB_TZ)
+        tomorrow = datetime.now(zone).date() + timedelta(days=1)
+        start = datetime.combine(tomorrow, time.min, tzinfo=zone).astimezone(ZoneInfo('UTC')).replace(tzinfo=None)
+        events = self.search([
+            ('lab_booking', '=', True),
+            ('lab_reminder_sent', '=', False),
+            ('lab_contact_email', '!=', False),
+            ('start', '>=', start),
+            ('start', '<', start + timedelta(days=1)),
+        ])
+        template = self.env.ref('lab_portal.mail_template_booking_reminder')
+        for event in events:
+            template.send_mail(event.id)
+        events.lab_reminder_sent = True
+        return len(events)

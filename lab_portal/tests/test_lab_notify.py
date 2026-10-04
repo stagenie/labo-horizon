@@ -1,0 +1,99 @@
+from datetime import date, datetime, time, timedelta
+from zoneinfo import ZoneInfo
+
+from odoo.fields import Command
+from odoo.tests import TransactionCase, new_test_user, tagged
+
+PARIS = ZoneInfo('Europe/Paris')
+UTC = ZoneInfo('UTC')
+
+
+@tagged('post_install', '-at_install')
+class TestLabNotify(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.user.group_ids |= cls.env.ref('lab_core.group_lab_biologist')
+        cls.Mail = cls.env['mail.mail']
+
+    def _patient(self, name, email=None, portal=True, confidential=False):
+        patient = self.env['lab.patient'].create({'name': name, 'birthdate': date(1990, 5, 5), 'gender': 'male',
+                                                  'email': email, 'is_confidential': confidential})
+        if portal:
+            action = patient.action_open_portal_wizard()
+            self.env['portal.wizard'].browse(action['res_id']).user_ids.action_grant_access()
+        return patient
+
+    def _analysed(self, patient):
+        req = self.env['lab.request'].create({
+            'patient_id': patient.id, 'panel_ids': [Command.set(self.env.ref('lab_core.panel_eal').ids)]})
+        req._sync_results_from_panels()
+        req.action_sample()
+        req.result_ids.value_text = '1'
+        req.action_analyse()
+        return req
+
+    def _mails_to(self, email):
+        return self.Mail.search([('email_to', 'ilike', email)])
+
+    def test_validation_sends_mail(self):
+        req = self._analysed(self._patient('Sami Haddad', 'sami@example.com'))
+        req.action_validate()
+        mail = self._mails_to('sami@example.com').filtered(lambda m: req.name in (m.subject or ''))
+        self.assertEqual(len(mail), 1)
+        self.assertIn(f'/my/results/{req.id}', mail.body_html)
+        self.assertNotIn('Cholestérol', mail.body_html)        # aucune valeur ni analyse dans le courriel
+
+    def test_no_mail_without_portal_access(self):
+        cases = [self._patient('Sans Portail', 'sansportail@example.com', portal=False),
+                 self._patient('Sans Courriel', portal=False),
+                 self._patient('Dossier Y', 'y@example.com', portal=False, confidential=True)]
+        for patient in cases:
+            req = self._analysed(patient)
+            req.action_validate()
+            self.assertEqual(req.state, 'validated')
+        self.assertFalse(self._mails_to('sansportail@example.com'))
+        self.assertFalse(self._mails_to('y@example.com'))
+
+    def test_biologist_validation_sends_mail(self):
+        req = self._analysed(self._patient('Rita Blanc', 'rita@example.com'))
+        biologist = new_test_user(self.env, 'biologiste_mail', groups='lab_core.group_lab_biologist')
+        req.with_user(biologist).action_validate()
+        self.assertTrue(self._mails_to('rita@example.com'))
+
+    def _booking(self, local_dt, email):
+        start = local_dt.replace(tzinfo=PARIS).astimezone(UTC).replace(tzinfo=None)
+        return self.env['calendar.event'].create({'name': 'RDV', 'start': start, 'stop': start + timedelta(minutes=15),
+                                                  'lab_booking': True, 'lab_contact_email': email})
+
+    def test_cron_reminds_tomorrow_only(self):
+        self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
+        tomorrow = datetime.now(PARIS).date() + timedelta(days=1)
+        self._booking(datetime.combine(tomorrow, time(7, 30)), 'demain@example.com')
+        self._booking(datetime.combine(tomorrow + timedelta(days=2), time(7, 30)), 'plustard@example.com')
+        self.assertEqual(self.env['calendar.event']._cron_lab_remind_tomorrow(), 1)
+        self.assertTrue(self._mails_to('demain@example.com'))
+        self.assertFalse(self._mails_to('plustard@example.com'))
+
+    def test_cron_reminds_once(self):
+        self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
+        tomorrow = datetime.now(PARIS).date() + timedelta(days=1)
+        self._booking(datetime.combine(tomorrow, time(8, 0)), 'unefois@example.com')
+        Event = self.env['calendar.event']
+        self.assertEqual(Event._cron_lab_remind_tomorrow(), 1)
+        self.assertEqual(Event._cron_lab_remind_tomorrow(), 0)
+        self.assertEqual(len(self._mails_to('unefois@example.com')), 1)
+
+    def test_reminder_time_in_paris(self):
+        self.env.user.tz = False                    # un utilisateur sans fuseau
+        self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
+        tomorrow = datetime.now(PARIS).date() + timedelta(days=1)
+        self._booking(datetime.combine(tomorrow, time(9, 15)), 'paris@example.com')
+        self.env['calendar.event']._cron_lab_remind_tomorrow()
+        self.assertIn('09:15', self._mails_to('paris@example.com').body_html)
+
+    def test_cron_record(self):
+        cron = self.env.ref('lab_portal.ir_cron_lab_remind')
+        self.assertEqual((cron.interval_number, cron.interval_type), (1, 'days'))
+        self.assertTrue(cron.active)

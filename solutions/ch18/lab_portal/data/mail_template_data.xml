@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_results_ready" model="mail.template">
+        <field name="name">Labo : résultats disponibles</field>
+        <field name="model_id" ref="lab_core.model_lab_request"/>
+        <field name="subject">Vos résultats {{ object.name }} sont disponibles</field>
+        <!-- use_default_to vaut True par défaut : email_to serait ignoré sans message -->
+        <field name="use_default_to" eval="False"/>
+        <field name="email_to">{{ object.patient_id.email }}</field>
+        <field name="body_html" type="html">
+<div>
+    <p>Bonjour <t t-out="object.patient_id.name"/>,</p>
+    <p>Les résultats de votre demande <t t-out="object.name"/> ont été validés par le biologiste.</p>
+    <p><a t-att-href="object.get_base_url() + object.access_url">Consulter mes résultats</a> (connexion à votre espace patient).</p>
+    <p>Labo Horizon</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    <record id="mail_template_booking_reminder" model="mail.template">
+        <field name="name">Labo : rappel de rendez-vous</field>
+        <field name="model_id" ref="calendar.model_calendar_event"/>
+        <field name="subject">Rappel : votre prélèvement demain au Labo Horizon</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="email_to">{{ object.lab_contact_email }}</field>
+        <field name="body_html" type="html">
+<div>
+    <p>Bonjour,</p>
+    <p>Nous vous rappelons votre rendez-vous de prélèvement le <t t-out="object.lab_display_start()"/> (heure de Paris).</p>
+    <p>Venez avec votre ordonnance. Pour un bilan sanguin, venez à jeun depuis 12 heures.</p>
+    <p>Labo Horizon</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    <!-- Exercice 18.1 -->
+    <record id="mail_template_booking_confirmed" model="mail.template">
+        <field name="name">Labo : rendez-vous confirmé</field>
+        <field name="model_id" ref="calendar.model_calendar_event"/>
+        <field name="subject">Votre rendez-vous de prélèvement au Labo Horizon</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="email_to">{{ object.lab_contact_email }}</field>
+        <field name="body_html" type="html">
+<div>
+    <p>Bonjour,</p>
+    <p>Votre rendez-vous de prélèvement est confirmé le <t t-out="object.lab_display_start()"/> (heure de Paris).</p>
+    <p>Venez avec votre ordonnance. Pour un bilan sanguin, venez à jeun depuis 12 heures.</p>
+    <p>Labo Horizon</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+</odoo>

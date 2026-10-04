@@ -1,4 +1,5 @@
-from odoo import api, models
+from odoo import _, api, models
+from odoo.exceptions import UserError
 
 
 class LabRequest(models.Model):
@@ -17,12 +18,10 @@ class LabRequest(models.Model):
 
     @api.model
     def _lab_portal_domain(self):
-        """Les demandes de « Mes résultats » : celles du patient connecté, une fois validées, tant que
-        son dossier n'est pas confidentiel.
+        """Les demandes de « Mes résultats » : celles du patient connecté, une fois validées.
         Le patient du portail ne lit pas les fiches patients : la lecture privilégiée se limite
         à retrouver les identifiants de ses propres fiches."""
-        patients = self.env['lab.patient'].sudo().search([('partner_id', '=', self.env.user.partner_id.id),
-                                                        ('is_confidential', '=', False)])
+        patients = self.env['lab.patient'].sudo().search([('partner_id', '=', self.env.user.partner_id.id)])
         return [('patient_id', 'in', patients.ids), ('state', '=', 'validated')]
 
     def action_validate(self):
@@ -38,3 +37,12 @@ class LabRequest(models.Model):
             patient = request.patient_id
             if patient.email and not patient.is_confidential and patient._has_portal_access():
                 template.send_mail(request.id)
+
+    def action_resend_results_mail(self):
+        """Exercice 18.2 : renvoyer l'e-mail des résultats, seulement à un patient qui peut l'ouvrir."""
+        for request in self:
+            patient = request.patient_id
+            if not (patient.email and not patient.is_confidential and patient._has_portal_access()):
+                raise UserError(_("%s : le patient n'a pas d'accès au portail, aucun e-mail n'est envoyé.", patient.name))
+        self.filtered(lambda r: r.state == 'validated')._notify_results_ready()
+        return True
