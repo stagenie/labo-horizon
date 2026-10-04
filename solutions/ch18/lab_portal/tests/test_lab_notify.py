@@ -1,4 +1,4 @@
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo.exceptions import UserError
@@ -45,6 +45,7 @@ class TestLabNotify(TransactionCase):
         self.assertEqual(len(mail), 1)
         self.assertIn(f'/my/results/{req.id}', mail.body_html)
         self.assertNotIn('Cholestérol', mail.body_html)        # aucune valeur ni analyse dans le courriel
+        self.assertEqual(mail.email_from, self.env.company.email_formatted)   # le laboratoire, pas l'utilisateur
 
     def test_no_mail_without_portal_access(self):
         cases = [self._patient('Sans Portail', 'sansportail@example.com', portal=False),
@@ -63,50 +64,64 @@ class TestLabNotify(TransactionCase):
         req.with_user(biologist).action_validate()
         self.assertTrue(self._mails_to('rita@example.com'))
 
-    def _booking(self, local_dt, email):
-        start = local_dt.replace(tzinfo=PARIS).astimezone(UTC).replace(tzinfo=None)
+    def _booking(self, start, email):
+        """Rendez-vous à l'heure UTC donnée (sans fuseau, comme Odoo stocke les dates)."""
         return self.env['calendar.event'].create({'name': 'RDV', 'start': start, 'stop': start + timedelta(minutes=15),
                                                   'lab_booking': True, 'lab_contact_email': email})
 
-    def test_cron_reminds_tomorrow_only(self):
+    def _in(self, **delta):
+        return (datetime.now(UTC) + timedelta(**delta)).replace(tzinfo=None, second=0, microsecond=0)
+
+    def test_cron_reminds_next_24_hours(self):
         self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
-        tomorrow = datetime.now(PARIS).date() + timedelta(days=1)
-        self._booking(datetime.combine(tomorrow, time(7, 30)), 'demain@example.com')
-        self._booking(datetime.combine(tomorrow + timedelta(days=2), time(7, 30)), 'plustard@example.com')
-        self.assertEqual(self.env['calendar.event']._cron_lab_remind_tomorrow(), 1)
-        self.assertTrue(self._mails_to('demain@example.com'))
+        self._booking(self._in(hours=20), 'bientot@example.com')
+        self._booking(self._in(hours=30), 'plustard@example.com')
+        self._booking(self._in(hours=-2), 'passe@example.com')
+        self.assertEqual(self.env['calendar.event']._cron_lab_remind(), 1)
+        self.assertTrue(self._mails_to('bientot@example.com'))
         self.assertFalse(self._mails_to('plustard@example.com'))
+        self.assertFalse(self._mails_to('passe@example.com'))
+
+    def test_late_booking_reminded(self):
+        self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
+        Event = self.env['calendar.event']
+        Event._cron_lab_remind()
+        self._booking(self._in(hours=1), 'tardif@example.com')            # pris après le passage précédent
+        self.assertEqual(Event._cron_lab_remind(), 1)
+        self.assertTrue(self._mails_to('tardif@example.com'))
 
     def test_cron_reminds_once(self):
         self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
-        tomorrow = datetime.now(PARIS).date() + timedelta(days=1)
-        self._booking(datetime.combine(tomorrow, time(8, 0)), 'unefois@example.com')
+        self._booking(self._in(hours=3), 'unefois@example.com')
         Event = self.env['calendar.event']
-        self.assertEqual(Event._cron_lab_remind_tomorrow(), 1)
-        self.assertEqual(Event._cron_lab_remind_tomorrow(), 0)
-        self.assertEqual(len(self._mails_to('unefois@example.com')), 1)
+        self.assertEqual(Event._cron_lab_remind(), 1)
+        self.assertEqual(Event._cron_lab_remind(), 0)
+        mail = self._mails_to('unefois@example.com')
+        self.assertEqual(len(mail), 1)
+        self.assertEqual(mail.email_from, self.env.company.email_formatted)
 
     def test_reminder_time_in_paris(self):
         self.env.user.tz = False                    # un utilisateur sans fuseau
         self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
-        tomorrow = datetime.now(PARIS).date() + timedelta(days=1)
-        self._booking(datetime.combine(tomorrow, time(9, 15)), 'paris@example.com')
-        self.env['calendar.event']._cron_lab_remind_tomorrow()
-        self.assertIn('09:15', self._mails_to('paris@example.com').body_html)
+        start = self._in(hours=5)
+        self._booking(start, 'paris@example.com')
+        self.env['calendar.event']._cron_lab_remind()
+        local = start.replace(tzinfo=UTC).astimezone(PARIS)
+        self.assertIn(local.strftime('%d/%m/%Y à %H:%M'), self._mails_to('paris@example.com').body_html)
 
     def test_cron_record(self):
         cron = self.env.ref('lab_portal.ir_cron_lab_remind')
-        self.assertEqual((cron.interval_number, cron.interval_type), (1, 'days'))
+        self.assertEqual((cron.interval_number, cron.interval_type), (1, 'hours'))
         self.assertTrue(cron.active)
 
     def test_booking_sends_confirmation(self):
-        today = date.today()
-        monday = today + timedelta(days=(7 - today.weekday()) % 7 or 7)
-        start = self.env['lab.slot']._get_available_slots(monday, days=1)[0]
+        Slot = self.env['lab.slot']
+        start = Slot._get_available_slots(Slot._lab_today())[0]
         event = self.env['lab.slot']._book(start, 'Léa Morel', '+33600000041', 'lea@example.com')
         mail = self._mails_to('lea@example.com')
         self.assertEqual(len(mail), 1)
         self.assertIn(event.lab_display_start(), mail.body_html)
+        self.assertEqual(mail.email_from, self.env.company.email_formatted)
 
     def test_resend_results_mail(self):
         req = self._analysed(self._patient('Yanis Roche', 'yanis@example.com'))

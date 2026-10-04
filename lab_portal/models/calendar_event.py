@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
@@ -26,17 +26,17 @@ class CalendarEvent(models.Model):
         return local.strftime('%d/%m/%Y à %H:%M')
 
     @api.model
-    def _cron_lab_remind_tomorrow(self):
-        """Rappel des rendez-vous de demain (heure de Paris), une seule fois par rendez-vous."""
-        zone = ZoneInfo(LAB_TZ)
-        tomorrow = datetime.now(zone).date() + timedelta(days=1)
-        start = datetime.combine(tomorrow, time.min, tzinfo=zone).astimezone(ZoneInfo('UTC')).replace(tzinfo=None)
+    def _cron_lab_remind(self):
+        """Rappel des rendez-vous des prochaines 24 heures, une seule fois par rendez-vous.
+        L'action planifiée passe toutes les heures : un rendez-vous pris tard pour le lendemain
+        matin reçoit son rappel au passage suivant."""
+        now = datetime.now(ZoneInfo('UTC')).replace(tzinfo=None)
         events = self.search([
             ('lab_booking', '=', True),
             ('lab_reminder_sent', '=', False),
             ('lab_contact_email', '!=', False),
-            ('start', '>=', start),
-            ('start', '<', start + timedelta(days=1)),
+            ('start', '>=', now),
+            ('start', '<', now + timedelta(hours=24)),
         ])
         template = self.env.ref('lab_portal.mail_template_booking_reminder')
         for event in events:

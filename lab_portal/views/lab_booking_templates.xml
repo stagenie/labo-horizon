@@ -30,7 +30,7 @@
                 <h1>Rendez-vous confirmé</h1>
                 <p>Votre prélèvement est prévu <t t-out="request.env['lab.slot']._format_local(event.start)"/>.</p>
                 <p>Venez avec votre ordonnance. Pour un bilan sanguin, venez à jeun depuis 12 heures.</p>
-                <p>Un e-mail de rappel vous sera envoyé la veille.</p>
+                <p>Un e-mail de rappel vous sera envoyé dans les 24 heures qui précèdent le rendez-vous.</p>
             </div>
         </t>
     </template>
