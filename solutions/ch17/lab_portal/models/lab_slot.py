@@ -66,9 +66,16 @@ class LabSlot(models.Model):
         return f"{dict(WEEKDAYS)[str(local.weekday())]} {local:%d/%m} à {local:%H:%M}"
 
     @api.model
+    def _lab_today(self):
+        """La date du jour au laboratoire (le serveur compte en UTC)."""
+        return datetime.now(ZoneInfo(LAB_TZ)).date()
+
+    @api.model
     def _book(self, start_utc, name, phone, email, comment=''):
-        """Rendez-vous créé si le créneau est proposé et encore libre ; False sinon."""
-        if start_utc not in self._get_available_slots(start_utc.date() - timedelta(days=1), days=3):
+        """Rendez-vous créé si le créneau est proposé et encore libre ; False sinon.
+        Le contrôle reprend la liste du formulaire : un créneau de la grille hors de la fenêtre
+        de réservation n'est pas proposé, il est refusé."""
+        if start_utc not in self._get_available_slots(self._lab_today()):
             return False
         try:
             with self.env.cr.savepoint():
@@ -78,9 +85,12 @@ class LabSlot(models.Model):
 
     @api.model
     def _create_booking_event(self, start_utc, name, phone, email, comment=''):
-        """Le visiteur n'a aucun droit : le rendez-vous est créé en superutilisateur, champ par champ."""
+        """Le visiteur n'a aucun droit : le rendez-vous est créé en superutilisateur, champ par champ.
+        Le nom du rendez-vous reste neutre : l'agenda est lu par tous les salariés, le contact du
+        patient par le seul secrétariat."""
         return self.env['calendar.event'].sudo().create({
-            'name': _("Prélèvement — %s", name),
+            'name': _("Prélèvement"),
+            'lab_contact_name': name,
             'start': start_utc,
             'stop': start_utc + timedelta(minutes=15),
             'lab_booking': True,

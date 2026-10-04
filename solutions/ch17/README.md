@@ -32,6 +32,7 @@ paramètre est absent ou n'est pas un entier (avec un avertissement dans le jour
 lisible que par l'administrateur : la lecture se fait en `sudo()`, un usage technique. Une valeur nulle ou négative
 retombe aussi sur 7 jours : un paramètre se modifie à la main, une faute de frappe ne doit pas fermer la prise de
 rendez-vous. `_get_available_slots` prend `days=None` et appelle
-`_booking_days()` quand aucune durée n'est donnée ; `_book`, qui passe `days=3`, n'est pas concerné.
+`_booking_days()` quand aucune durée n'est donnée. `_book` contrôle le créneau sur cette même liste : la fenêtre
+réglée vaut aussi pour le formulaire envoyé à la main.
 
 Critère : le test `test_booking_window_parameter` passe.

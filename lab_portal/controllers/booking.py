@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from odoo import _
 from odoo.http import Controller, request, route
@@ -12,7 +12,7 @@ class LabBooking(Controller):
     def _render_form(self, error=None, values=None):
         Slot = request.env['lab.slot']
         return request.render('lab_portal.booking_form', {
-            'choices': [(s.strftime(SLOT_FORMAT), Slot._format_local(s)) for s in Slot._get_available_slots(date.today())],
+            'choices': [(s.strftime(SLOT_FORMAT), Slot._format_local(s)) for s in Slot._get_available_slots(Slot._lab_today())],
             'error': error,
             'values': values or {},
         })

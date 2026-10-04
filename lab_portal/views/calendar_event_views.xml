@@ -8,6 +8,7 @@
             <list create="false" default_order="start">
                 <field name="start" string="Début"/>
                 <field name="name" string="Rendez-vous"/>
+                <field name="lab_contact_name"/>
                 <field name="lab_contact_phone"/>
                 <field name="lab_contact_email"/>
             </list>
