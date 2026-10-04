@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_breadcrumbs_lab" name="Fil d'Ariane : résultats" inherit_id="portal.portal_breadcrumbs" priority="40">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'lab_results'" class="breadcrumb-item active">Mes résultats</li>
+            <li t-if="page_name == 'lab_result'" class="breadcrumb-item"><a href="/my/results">Mes résultats</a></li>
+            <li t-if="page_name == 'lab_result'" class="breadcrumb-item active" t-out="lab_request.name"/>
+        </xpath>
+    </template>
+
+    <template id="portal_my_lab_results" name="Mes résultats">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar" title.translate="Mes résultats d'analyses"/>
+            <p t-if="not lab_requests">Aucun résultat validé pour le moment.</p>
+            <t t-if="lab_requests" t-call="portal.portal_table">
+                <thead><tr><th>Demande</th><th>Validée le</th><th class="text-end">Hors normes</th><th class="text-end">PDF</th></tr></thead>
+                <tbody>
+                    <tr t-foreach="lab_requests" t-as="req">
+                        <td><a t-att-href="req.access_url" t-out="req.name"/></td>
+                        <td><span t-field="req.validated_date" t-options="{'widget': 'date'}"/></td>
+                        <td class="text-end" t-out="req.abnormal_count"/>
+                        <td class="text-end"><a t-att-href="'%s/pdf' % req.access_url">Télécharger</a></td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_lab_result" name="Compte rendu">
+        <t t-call="portal.portal_layout">
+            <h3 class="mt-3">Compte rendu <t t-out="lab_request.name"/></h3>
+            <a class="btn btn-primary mb-3" t-att-href="'%s/pdf' % lab_request.access_url">Télécharger le PDF</a>
+            <table class="table table-sm">
+                <thead><tr><th>Analyse</th><th class="text-end">Résultat</th><th>Unité</th><th class="text-end">Référence</th></tr></thead>
+                <tbody>
+                    <tr t-foreach="lab_request.result_ids" t-as="res"
+                        t-att-class="'table-danger' if res.flag in ('low', 'high') else ''">
+                        <td t-out="res.analysis_id.name"/>
+                        <td class="text-end" t-out="res.value_text"/>
+                        <td t-out="res.unit or ''"/>
+                        <td class="text-end"><span t-field="res.range_min"/> – <span t-field="res.range_max"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="portal_lab_results" model="portal.entry">
+        <field name="name">Mes résultats d'analyses</field>
+        <field name="description">Consultez et téléchargez vos comptes rendus validés</field>
+        <field name="url">/my/results</field>
+        <field name="image" type="bytes" file="lab_portal/static/src/img/results.svg"/>
+        <field name="placeholder_count">lab_result_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="35"/>
+    </record>
+</odoo>

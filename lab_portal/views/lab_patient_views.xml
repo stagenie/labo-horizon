@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_patient_view_form_portal" model="ir.ui.view">
+        <field name="name">lab.patient.form.portal</field>
+        <field name="model">lab.patient</field>
+        <field name="inherit_id" ref="lab_core.lab_patient_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <field name="is_confidential" invisible="1"/>
+                    <button name="action_open_portal_wizard" type="object" string="Accès au portail"
+                            invisible="is_confidential"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>
