@@ -52,6 +52,14 @@ class TestLabPortal(HttpCase):
         self.assertEqual(never_invoiced.partner_id.email, 'lea@example.com')
         self.assertTrue(self.user_a._is_portal())
 
+    def test_portal_wizard_uses_patient_email(self):
+        invoiced_first = self.env['lab.patient'].create({'name': 'Hugo Blanc', 'gender': 'male'})
+        invoiced_first._get_or_create_partner()            # contact créé à la facture, sans e-mail
+        invoiced_first.email = 'hugo@example.com'          # e-mail saisi ensuite sur la fiche patient
+        action = invoiced_first.action_open_portal_wizard()
+        wizard = self.env['portal.wizard'].browse(action['res_id'])
+        self.assertEqual(wizard.user_ids.email, 'hugo@example.com')
+
     def test_confidential_patient_not_opened_to_portal(self):
         secret = self.env['lab.patient'].create({'name': 'Dossier X', 'gender': 'male', 'email': 'x@example.com',
                                                  'is_confidential': True})

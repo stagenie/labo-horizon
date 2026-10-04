@@ -13,4 +13,6 @@ class LabPatient(models.Model):
         if not self.email:
             raise UserError(_("%s : renseignez l'e-mail du patient avant d'ouvrir son accès.", self.name))
         partner = self._get_or_create_partner()
+        if partner.email != self.email:     # contact créé à la facture, e-mail saisi ou corrigé depuis
+            partner.email = self.email
         return self.env['portal.wizard'].with_context(default_partner_ids=partner.ids).action_open_wizard()
