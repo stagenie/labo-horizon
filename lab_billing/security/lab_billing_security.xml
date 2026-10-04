@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Une mutuelle EST un contact (_inherits) et l'accueil crée les contacts des patients :
-         le secrétariat, et par héritage des groupes tout le laboratoire, crée des contacts. -->
+         le secrétariat, et par héritage des groupes tout le laboratoire, crée des contacts ;
+         et l'accueil facture (chapitre 15). -->
     <record id="lab_core.group_lab_secretary" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('base.group_partner_manager'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_partner_manager')), (4, ref('account.group_account_invoice'))]"/>
     </record>
     <!-- L'article de service suit l'analyse : qui gère le catalogue gère les articles. -->
     <record id="lab_core.group_lab_biologist" model="res.groups">

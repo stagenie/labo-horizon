@@ -12,4 +12,52 @@
             </field>
         </field>
     </record>
+    <record id="lab_request_view_form_billing" model="ir.ui.view">
+        <field name="name">lab.request.form.billing</field>
+        <field name="model">lab.request</field>
+        <field name="inherit_id" ref="lab_core.lab_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <button name="action_create_invoices" type="object" string="Facturer" class="btn-primary"
+                        invisible="billing_state != 'to_invoice'" groups="account.group_account_invoice"/>
+            </field>
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_invoices" type="object" class="oe_stat_button"
+                            icon="edit_square" invisible="not invoice_count">
+                        <field name="invoice_count" widget="statinfo" string="Factures"/>
+                    </button>
+                </div>
+            </xpath>
+            <field name="date_request" position="after">
+                <field name="billing_state" widget="badge" invisible="not billing_state"
+                       decoration-warning="billing_state == 'to_invoice'"
+                       decoration-info="billing_state == 'invoiced'"
+                       decoration-success="billing_state == 'paid'"/>
+            </field>
+        </field>
+    </record>
+    <record id="lab_request_view_list_billing" model="ir.ui.view">
+        <field name="name">lab.request.list.billing</field>
+        <field name="model">lab.request</field>
+        <field name="inherit_id" ref="lab_core.lab_request_view_list"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="billing_state" widget="badge" optional="show"
+                       decoration-warning="billing_state == 'to_invoice'"
+                       decoration-info="billing_state == 'invoiced'"
+                       decoration-success="billing_state == 'paid'"/>
+            </field>
+        </field>
+    </record>
+    <record id="lab_request_view_search_billing" model="ir.ui.view">
+        <field name="name">lab.request.search.billing</field>
+        <field name="model">lab.request</field>
+        <field name="inherit_id" ref="lab_core.lab_request_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="abnormal" position="after">
+                <filter name="to_invoice" string="À facturer" domain="[('billing_state', '=', 'to_invoice')]"/>
+            </filter>
+        </field>
+    </record>
 </odoo>

@@ -17,6 +17,7 @@
         'views/res_partner_views.xml',
         'views/lab_request_views.xml',
         'views/account_move_views.xml',
+        'data/lab_billing_actions.xml',
     ],
     'demo': ['demo/lab_billing_demo.xml'],
 }
