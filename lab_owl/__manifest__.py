@@ -1,6 +1,6 @@
 {
     'name': 'Labo Horizon — Aller plus loin',
-    'version': '20.0.1.20.0',
+    'version': '20.0.1.21.0',
     'summary': "Jauge OWL 3 des résultats, API pour les automates, tests",
     'category': 'Services',
     'author': 'OdooSkills',
@@ -15,6 +15,9 @@
             'lab_owl/static/src/gauge/lab_gauge_field.js',
             'lab_owl/static/src/gauge/lab_gauge_field.xml',
             'lab_owl/static/src/gauge/lab_gauge_field.scss',
+        ],
+        'web.assets_unit_tests': [
+            'lab_owl/static/tests/**/*',
         ],
     },
     'installable': True,

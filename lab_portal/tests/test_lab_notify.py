@@ -99,6 +99,22 @@ class TestLabNotify(TransactionCase):
         self.assertEqual(len(mail), 1)
         self.assertEqual(mail.email_from, self.env.company.email_formatted)
 
+    def test_moved_booking_reminded_again(self):
+        self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
+        event = self._booking(self._in(hours=5), 'deplace@example.com')
+        self.env['calendar.event']._cron_lab_remind()
+        event.write({'start': self._in(hours=8), 'stop': self._in(hours=8, minutes=15)})
+        self.env['calendar.event']._cron_lab_remind()
+        self.assertEqual(len(self._mails_to('deplace@example.com')), 2)
+
+    def test_same_start_not_reminded_twice(self):
+        self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()
+        event = self._booking(self._in(hours=5), 'fixe@example.com')
+        self.env['calendar.event']._cron_lab_remind()
+        event.write({'start': event.start, 'stop': event.stop})
+        self.env['calendar.event']._cron_lab_remind()
+        self.assertEqual(len(self._mails_to('fixe@example.com')), 1)
+
     def test_reminder_time_in_paris(self):
         self.env.user.tz = False                    # un utilisateur sans fuseau
         self.env['calendar.event'].search([('lab_booking', '=', True)]).unlink()

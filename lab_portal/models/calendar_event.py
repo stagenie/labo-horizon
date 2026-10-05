@@ -18,6 +18,17 @@ class CalendarEvent(models.Model):
     _lab_booking_start_uniq = models.UniqueIndex(
         "(start) WHERE lab_booking IS TRUE AND active IS TRUE", "Ce créneau est déjà réservé.")
 
+    def write(self, vals):
+        """Un rendez-vous déplacé après son rappel sera rappelé de nouveau, pour sa nouvelle heure."""
+        if 'start' not in vals:
+            return super().write(vals)
+        new_start = fields.Datetime.to_datetime(vals['start'])
+        moved = self.filtered(lambda event: event.lab_reminder_sent and event.start != new_start)
+        result = super().write(vals)
+        if moved:
+            moved.lab_reminder_sent = False
+        return result
+
     def lab_display_start(self):
         """Heure locale du rendez-vous pour les courriels. get_display_time_tz() ne convient pas :
         l'heure y est formatée dans le fuseau de l'utilisateur, pas dans celui demandé."""

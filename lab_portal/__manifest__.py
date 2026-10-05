@@ -1,6 +1,6 @@
 {
     'name': 'Labo Horizon — Portail',
-    'version': '20.0.1.18.0',
+    'version': '20.0.1.21.0',
     'summary': 'Résultats validés en ligne, compte rendu en PDF, prise de rendez-vous sur le site, courriels',
     'category': 'Services',
     'author': 'OdooSkills',
