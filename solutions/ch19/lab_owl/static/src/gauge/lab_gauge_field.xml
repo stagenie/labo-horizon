@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="lab_owl.LabGaugeField">
+        <div t-if="this.hasValue" class="o_lab_gauge" t-att-class="{ o_lab_gauge_compact: this.props.compact }"
+             t-att-title="this.tooltip">
+            <div class="o_lab_gauge_track"/>
+            <div class="o_lab_gauge_range"/>
+            <div t-att-class="'o_lab_gauge_marker ' + this.markerClass"
+                 t-att-style="'left: calc(' + this.percent + '% - 5px)'"/>
+        </div>
+        <span t-else="" class="text-muted">—</span>
+    </t>
+</templates>

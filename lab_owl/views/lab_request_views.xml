@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lab_request_view_form_gauge" model="ir.ui.view">
+        <field name="name">lab.request.form.gauge</field>
+        <field name="model">lab.request</field>
+        <field name="inherit_id" ref="lab_core.lab_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='result_ids']/list/field[@name='flag']" position="before">
+                <field name="value" widget="lab_gauge" string="Position" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
