@@ -1,6 +1,7 @@
 .o_lab_gauge {
     position: relative;
     width: 140px;
+    margin-left: auto;          // colonne de nombres : alignée à droite, sous son en-tête
     height: 12px;
 
     .o_lab_gauge_track {
