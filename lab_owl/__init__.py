@@ -1,1 +1,1 @@
-# Modèles Python : à partir du chapitre 20.
+from . import models

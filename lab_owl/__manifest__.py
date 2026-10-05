@@ -1,6 +1,6 @@
 {
     'name': 'Labo Horizon — Aller plus loin',
-    'version': '20.0.1.19.0',
+    'version': '20.0.1.20.0',
     'summary': "Jauge OWL 3 des résultats, API pour les automates, tests",
     'category': 'Services',
     'author': 'OdooSkills',
