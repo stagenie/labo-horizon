@@ -12,7 +12,8 @@ Le commentaire reste facultatif : il n'entre pas dans les contrôles du contrôl
 écrits en superutilisateur, la seule porte d'entrée du visiteur ; un champ que le formulaire n'envoie pas ne peut pas
 y arriver.
 
-Critère : le test `test_booking_keeps_comment` passe.
+Critère : un rendez-vous pris sur le site avec un commentaire entouré d'espaces le retrouve, sans les espaces, dans
+la Description de sa fiche (Laboratoire › Rendez-vous).
 
 ## Exercice 17.2 — Une fenêtre de réservation réglable
 
@@ -35,4 +36,6 @@ rendez-vous. `_get_available_slots` prend `days=None` et appelle
 `_booking_days()` quand aucune durée n'est donnée. `_book` contrôle le créneau sur cette même liste : la fenêtre
 réglée vaut aussi pour le formulaire envoyé à la main.
 
-Critère : le test `test_booking_window_parameter` passe.
+Critère : avec le paramètre à 1, la liste déroulante de `/rdv` ne propose aucun créneau au-delà de demain ; à 14,
+elle en propose dans plus d'une semaine. Dans le shell, `env['lab.slot']._booking_days()` renvoie la valeur réglée,
+et 7 pour `0` ou `abc`.

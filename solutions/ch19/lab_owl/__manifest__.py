@@ -17,9 +17,6 @@
             'lab_owl/static/src/gauge/lab_gauge_field.xml',
             'lab_owl/static/src/gauge/lab_gauge_field.scss',
         ],
-        'web.assets_unit_tests': [
-            'lab_owl/static/tests/**/*',
-        ],
     },
     'installable': True,
 }

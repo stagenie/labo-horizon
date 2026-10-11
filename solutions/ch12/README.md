@@ -14,7 +14,8 @@ Une ligne de plus dans le gabarit de l'étiquette, `report/lab_sample_label.xml`
 clé technique (`female`), `t-field` affiche le libellé dans la langue du rapport (« Femme »). Le sexe compte à
 la paillasse : il choisit les valeurs de référence de l'hémoglobine (chapitre 6).
 
-Critère : le test `test_label_shows_age_and_gender` passe.
+Critère : après la mise à jour du module, l'étiquette du tube de Nadia Haddad (DEM/2026/00004, menu Actions ›
+Étiquette de tube) montre, sous son nom, son âge suivi de « Femme », par exemple « 62 ans · Femme ».
 
 ## Exercice 12.2 — Le nom du fichier PDF
 
@@ -29,4 +30,5 @@ L'expression est évaluée par le contrôleur de téléchargement avec `object` 
 `CR-PAT-00007-DEM/2026/00012`, est nettoyé par le navigateur (la barre oblique n'est pas permise dans un nom de
 fichier).
 
-Critère : le test `test_report_file_name` passe.
+Critère : le compte rendu de DEM/2026/00004, imprimé depuis le formulaire, se télécharge sous un nom qui commence
+par `CR-PAT-00004-`.

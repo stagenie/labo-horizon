@@ -23,7 +23,9 @@ Le code appelle `_create_invoices`, pas `action_create_invoices` : l'action serv
 factures. Une demande non validée ou déjà facturée dans la sélection arrête tout, avec son message : aucune facture
 n'est créée à moitié, la transaction est annulée.
 
-Critère : le test `test_server_action_invoices_selection` passe.
+Critère : dans Laboratoire › Demandes, cocher deux demandes validées, par exemple DEM/2026/00004 et une autre
+validée pour l'occasion, puis Actions › Facturer les demandes : leur colonne Facturation passe ensemble à
+« Facturée ».
 
 ## Exercice 15.2 — Une note dans le fil de la demande
 
@@ -40,4 +42,5 @@ Une facture brouillon n'a pas encore de numéro (il est attribué à la comptabi
 clients facturés. Le piège du chapitre 8 revient : sans `Markup`, `message_post` échapperait les balises `<b>` ; avec
 `Markup`, l'opérateur `%` échappe le nom inséré, et un nom contenant `<` reste du texte.
 
-Critère : le test `test_invoicing_posts_note` passe.
+Critère : après la facturation de DEM/2026/00004, le fil de la demande affiche « Factures brouillon créées pour
+**Nadia Haddad**, **Mutuelle Horizon Santé**. », les deux noms en gras.

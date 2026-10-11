@@ -14,7 +14,9 @@ s'exécute pour le visiteur anonyme, qui ne lit pas `mail.template`. L'envoi a l
 
 Le gabarit étant en `noupdate`, une base déjà installée le reçoit quand même au `-u` : c'est un nouvel identifiant XML.
 
-Critère : le test `test_booking_sends_confirmation` passe.
+Critère : une réservation sur le site crée, dans Paramètres › Technique › E-mails (mode développeur), un courriel à
+l'état Sortant, adressé à l'e-mail saisi, qui annonce l'heure de Paris du créneau choisi. Un créneau refusé par
+« Ce créneau vient d'être réservé » ne crée aucun courriel.
 
 ## Exercice 18.2 — Renvoyer l'e-mail des résultats
 
@@ -26,4 +28,6 @@ confidentiel ou sans accès au portail : à la validation, ce cas se taisait (la
 un courriel) ; ici, la secrétaire a demandé un envoi, elle doit savoir qu'il n'a pas lieu. Sinon, la méthode appelle
 `_notify_results_ready`, la même que la validation.
 
-Critères : les tests `test_resend_results_mail` et `test_resend_refused_without_portal` passent.
+Critères : connectée en `secretaire`, le bouton renvoie le courriel d'un patient du portail (deux courriels « Vos
+résultats … sont disponibles » existent alors pour la demande, dans Paramètres › Technique › E-mails) ; pour un
+patient sans accès au portail, l'erreur s'affiche et aucun courriel n'est créé.

@@ -13,7 +13,8 @@ Dans le gabarit `portal_my_lab_results`, une colonne de plus, dans l'en-tête et
 Le lien vise la même route que le bouton du compte rendu : le contrôle des droits reste celui de
 `_lab_request_check_access`, rien n'est ajouté côté serveur.
 
-Critère : le test `test_list_has_download_links` passe.
+Critère : connecté en patient, chaque ligne de « Mes résultats » porte un lien Télécharger ; un clic enregistre le
+PDF de la demande, `Compte_rendu_DEM_….pdf`.
 
 ## Exercice 16.2 — Trier la liste
 
@@ -33,4 +34,6 @@ if sortby not in searchbar_sortings:
 Une valeur inconnue (`?sortby=n_importe_quoi`) retombe sur le tri par date : un paramètre d'adresse se modifie à la
 main, il ne doit jamais arriver tel quel dans une requête.
 
-Critère : le test `test_list_sorted_by_name` passe.
+Critère : connecté en patient qui a au moins deux demandes validées, `/my/results?sortby=name` et
+`/my/results?sortby=date` les affichent dans des ordres opposés ; le menu de tri de la barre propose « Date de
+validation » et « Numéro ».

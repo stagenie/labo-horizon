@@ -14,7 +14,9 @@ rien n'est écrit dans Odoo. Un fichier introuvable est traité de la même faç
 `urllib.error.HTTPError` hérite d'`OSError` ; un `except OSError` placé avant celui de `HTTPError` avalerait les refus
 du serveur. Le corrigé convertit donc l'erreur de fichier en `ValueError` dans `read_csv`.
 
-Critères : les tests `test_script_reads_csv` et `test_script_rejects_bad_csv_line` passent.
+Critères : `python3 scripts/automate.py … --csv resultats.csv` avec un fichier de quatre lignes affiche la réponse
+d'Odoo et rend le code 0 (`echo $?`), et les quatre valeurs apparaissent dans la demande ; une ligne sans
+point-virgule affiche son numéro, rend le code 2, et la demande, rouverte à l'écran, n'a pas changé.
 
 ## Exercice 20.2 — Ce qui reste à mesurer
 
@@ -25,4 +27,13 @@ avec `_lab_push_results` : même message « Demande … introuvable. », même r
 
 Appel : `POST /json/2/lab.request/api_pending_analyses` avec le corps `{"request_ref": "DEM/2026/00007"}`.
 
-Critères : les tests `test_api_pending_analyses` et `test_api_pending_unknown_request` passent.
+Vérification avec `curl`, la clé dans `LAB_API_KEY` :
+
+```text
+curl -s -X POST http://localhost:8069/json/2/lab.request/api_pending_analyses \
+    -H "Authorization: Bearer $LAB_API_KEY" -H "X-Odoo-Database: vs20_lab_dev" \
+    -H "Content-Type: application/json" -d '{"request_ref": "DEM/2026/00007"}'
+```
+
+Critères : après l'envoi du seul cholestérol total, la réponse est `["HDL", "LDL", "TG"]` ; pour une demande
+inconnue, `-w '%{http_code}'` affiche 422, et le champ `debug` de la réponse tient en une ligne, sans trace Python.

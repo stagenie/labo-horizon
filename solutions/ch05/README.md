@@ -14,10 +14,10 @@ Un sixième enregistrement dans `data/lab_panel_data.xml` :
 </record>
 ```
 
-Le test `test_panels_data` comptait 5 bilans : il en attend désormais 6 (`tests/test_lab_catalog.py`).
-
 Attention : le fichier est en `noupdate="1"`, mais un enregistrement **nouveau** est bien créé par `-u lab_core`
-(chapitre 3). Critère : **Configuration › Bilans** affiche « Bilan thyroïdien » avec l'étiquette TSH.
+(chapitre 3). Critère : **Configuration › Bilans** affiche « Bilan thyroïdien » avec l'étiquette TSH, et dans le
+shell `env['lab.panel'].search([]).mapped('code')` rend `['BIL1', 'BHEP', 'EAL', 'BREN', 'THY', 'NFS']` (ordre des
+noms).
 
 ## Exercice 5.2 — Retirer les lignes vides
 
@@ -29,7 +29,7 @@ def action_clear_empty_results(self):
 
 et, dans l'en-tête du formulaire, `<button name="action_clear_empty_results" type="object" string="Retirer les lignes
 vides"/>`. La méthode réutilise `_get_pending_results()` du chapitre 4 : `unlink()` supprime d'un coup toutes les
-lignes du recordset. Le test `test_clear_empty_results` charge le bilan de base, saisit la glycémie, et vérifie
-qu'il ne reste qu'elle.
+lignes du recordset.
 
-Critère : les tests du module passent (`--test-tags /lab_core` sur une base neuve, section 4.8 du livre).
+Critère : sur une demande, choisir « Bilan de base », cliquer **Charger les analyses des bilans**, saisir la seule
+glycémie, puis cliquer **Retirer les lignes vides** : seule la ligne GLY reste.

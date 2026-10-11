@@ -19,7 +19,9 @@ installé (la vôtre depuis le chapitre 16), `-u lab_owl` échoue alors sur
 `lab_owl` (Applications › Labo Horizon — Aller plus loin › Désinstaller), puis l'installer de nouveau. Une base neuve
 (`-i`) n'est pas concernée.
 
-Critères : les tests `test_out_of_range_action_domain` et `test_out_of_range_list_uses_gauge` passent.
+Critères : connecté en `technicien`, le menu Laboratoire › Résultats hors norme liste les seuls résultats bas ou
+hauts, chacun avec un point rouge à sa juste place ; les colonnes Min et Max n'apparaissent pas. En mode
+développeur, l'infobulle de l'en-tête de la colonne nomme le widget « Jauge de référence (lab_gauge) ».
 
 ## Exercice 19.2 — Une jauge compacte
 
@@ -28,8 +30,6 @@ Le composant reçoit une propriété de plus, `compact`, déclarée avec les aut
 `labGaugeField` la lit dans les options de la vue (`options="{'compact': True}"`) ; le gabarit ajoute alors la classe
 `o_lab_gauge_compact`, que le SCSS réduit à 80 px.
 
-Le test JavaScript `static/tests/lab_gauge_compact.test.js` monte une liste avec et sans l'option ; le manifeste
-déclare le dossier des tests dans le bundle `web.assets_unit_tests`. Le test se lance à l'installation du module avec
-`--test-tags /lab_owl` (paquet Python `websocket-client` requis, voir le chapitre 21).
-
-Critère : les tests hoot `compact option narrows the gauge` et `gauge is wide by default` passent.
+Critère : avec l'option, la jauge mesure 80 pixels de large ; sans elle, 140, comme avant. Dans le navigateur
+(F12, onglet Éléments), la `div` de classe `o_lab_gauge` porte aussi `o_lab_gauge_compact`, et l'onglet Calculé
+donne sa largeur.

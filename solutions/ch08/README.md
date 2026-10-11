@@ -16,7 +16,14 @@ request.message_post(body=Markup(_("<b>%s</b> tube(s) prélevé(s).")) % len(req
 afficherait `<b>3</b>` en toutes lettres. `Markup` déclare la chaîne sûre ; l'opérateur `%` appliqué à un
 `Markup` échappe, lui, la valeur insérée.
 
-Critère : le test `test_sampling_posts_tube_count` passe ; le chatter de la demande affiche le nombre en gras.
+Critère, à l'écran : après « Prélever », le fil de la demande affiche « **1** tube(s) prélevé(s). » (ou 2, 3…
+selon les types de prélèvement), le nombre en gras et sans balise visible. Dans le shell, juste après
+`req.action_sample()` :
+
+```python
+>>> req.message_ids[0].body
+Markup('<span><b>1</b> tube(s) prélevé(s).</span>')
+```
 
 ## Exercice 8.2 — Appeler le patient en cas de résultat hors normes
 
@@ -31,9 +38,21 @@ for request in to_validate.filtered('abnormal_count'):
     )
 ```
 
-`mail.mail_activity_data_call` est le type d'activité « Appel » livré par le module `mail`. Le test
-`test_validate_closes_activity` ne vérifie plus qu'il ne reste aucune activité, mais qu'il ne reste plus
-d'activité « Validation biologique » : la demande de test a des résultats hors normes et reçoit donc l'appel.
+`mail.mail_activity_data_call` est le type d'activité « Appel » livré par le module `mail`. Après la validation, une
+demande hors normes ne garde donc plus l'activité « Validation biologique », mais porte l'appel.
 
-Critère : `--test-tags /lab_core` passe ; une demande validée avec un résultat hors normes porte l'activité
-« Appeler le patient ».
+Critère, à l'écran : une demande validée avec un résultat hors normes montre, dans son chatter, l'activité
+« Appeler le patient » ; une demande aux résultats normaux n'a plus aucune activité. Dans le shell, sur une demande
+du bilan de base dont toutes les valeurs valent `1` (l'hémoglobine est alors basse) :
+
+```python
+>>> req.abnormal_count
+1
+>>> req.action_validate()
+True
+>>> req.activity_ids.summary
+'Appeler le patient'
+```
+
+et, sur une demande aux valeurs normales (glycémie `0,90`, hémoglobine `13`, CRP `2`), `req.activity_ids` vaut
+`mail.activity()` après la validation.

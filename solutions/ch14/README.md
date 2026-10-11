@@ -22,7 +22,9 @@ recherche, un filtre après « Hommes » :
 `optional="show"` rend la colonne masquable par l'utilisateur, visible par défaut. Le filtre s'ancre sur le `name`
 d'un filtre existant : la même règle que pour les champs.
 
-Critères : les tests `test_patient_list_has_insurer_column` et `test_search_has_no_insurer_filter` passent.
+Critères : après la mise à jour du module, la liste Laboratoire › Patients montre la colonne Mutuelle après
+l'e-mail, et le filtre « Sans mutuelle » ne laisse que les trois patients de démonstration sans mutuelle : Amel
+Cherif, Chloé Garnier et Paul Mercier.
 
 ## Exercice 14.2 — Le bouton « Demandes » sur la fiche contact
 
@@ -42,4 +44,17 @@ contact, repérée par son `name` :
 `icon="science"` est un nom d'icône d'Odoo 20 (plus de FontAwesome) ; `groups` retire le bouton aux utilisateurs
 sans accès au laboratoire.
 
-Critère : le test `test_partner_request_count` passe.
+Critère : sur le contact d'un patient, le bouton Demandes affiche le nombre de ses demandes et ouvre leur liste.
+À ce stade, aucun patient n'a encore de contact (il naît à la première facture, chapitre 15) ; le shell en crée un
+pour vérifier le calcul et l'action :
+
+```python
+>>> c = env.ref('lab_core.patient_demo_1')._get_or_create_partner()
+>>> c.lab_request_count
+1
+>>> c.action_view_lab_requests()['domain']
+[('patient_id', 'in', [1])]
+>>> env.cr.rollback()
+```
+
+Julie Bernard a une demande sur une base de démonstration neuve ; le nombre suit celles créées depuis.

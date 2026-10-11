@@ -14,7 +14,19 @@ Sans groupe, la ligne est une **restriction** : elle s'applique à tous les util
 permissions. Pour l'opération `d` (suppression), seules les demandes non validées restent permises, même au
 biologiste qui a le droit `crud`. Seul le superutilisateur y échappe.
 
-Critère : le test `test_validated_request_cannot_be_deleted` passe.
+Critère, à l'écran : connecté en administrateur (biologiste), une demande en brouillon se supprime ; sur une
+demande validée, la suppression est refusée par le dialogue « Erreur d'accès ». Dans le shell,
+en administrateur (`env['lab.request'].with_user(env.ref('base.user_admin'))`), `unlink()` renvoie `True` sur une
+demande en brouillon, et refuse une demande validée :
+
+```text
+odoo.exceptions.AccessError: Oups ! On dirait que vous êtes tombé sur des enregistrements top secrets.
+Désolé, Mitchell Admin (id=2) n'a pas d'accès 'delete' à :
+- Demande d'analyses (lab.request)
+Si vous avez vraiment besoin d'un accès, vous pouvez peut-être convaincre votre sympathique administrateur en lui offrant des cookies maison.
+```
+
+L'opération y reste en anglais (`'delete'`), telle qu'Odoo 20 l'écrit dans ce message.
 
 ## Exercice 10.2 — `groups` ou `invisible` ?
 
@@ -31,7 +43,7 @@ def _compute_can_validate(self):
 ```
 
 `@api.depends_context('uid')` est indispensable : sans lui, la valeur calculée pour un utilisateur reste en cache
-et sert aussi au suivant (le test le montre). Puis, sur le bouton Valider, `invisible="state != 'analysed' or not can_validate"` à la place de `groups`, avec
+et sert aussi au suivant. Puis, sur le bouton Valider, `invisible="state != 'analysed' or not can_validate"` à la place de `groups`, avec
 `<field name="can_validate" invisible="1"/>` dans l'en-tête pour que le client web connaisse la valeur.
 
 Comparaison : `groups` retire le bouton de l'architecture envoyée au navigateur ; `invisible` le cache, mais il
@@ -40,4 +52,12 @@ indispensable. Sur une page qui contient un champ illisible pour l'utilisateur, 
 secrétaire, seul `groups` convient : avec `invisible`, le formulaire chargerait quand même les résultats et
 lèverait une erreur d'accès.
 
-Critère : `--test-tags /lab_core` passe ; le bouton Valider reste réservé au biologiste.
+Critère, à l'écran : sur une demande analysée, le bouton « Valider » apparaît pour l'administrateur, biologiste, et
+non pour le compte `technicien`. Dans le shell, sur une demande `req` :
+
+```python
+>>> req.with_user(env.ref('base.user_admin')).can_validate, req.with_user(tech).can_validate
+(True, False)
+```
+
+avec `tech = env['res.users'].search([('login', '=', 'technicien')])`.

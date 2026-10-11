@@ -29,7 +29,9 @@ Odoo 20 présente toujours la condition sous la forme `in` : `('is_minor', '=', 
 `operator='in'`, `value={True}` ; la négation est prise en charge par l'ORM. Le filtre « Mineurs » s'ajoute à une
 vue de recherche des patients, créée pour l'occasion.
 
-Critère : le test `test_minor_search` passe, et le filtre « Mineurs » n'affiche que les patients de moins de 18 ans.
+Critère : le filtre « Mineurs » n'affiche que les patients de moins de 18 ans : Chloé Garnier dans la
+démonstration. Dans le shell, `env['lab.patient'].search([('is_minor', '=', True)]).mapped('name')` rend
+`['Chloé Garnier']`.
 
 ## Exercice 6.2 — Pas de naissance dans le futur
 
@@ -42,5 +44,5 @@ def _check_birthdate(self):
             raise ValidationError(_("%s : la date de naissance est dans le futur.", patient.name))
 ```
 
-Critère : le test `test_future_birthdate_refused` passe ; dans l'interface, enregistrer une date future affiche le
-message.
+Critère : dans l'interface, enregistrer une date de naissance future affiche le message
+« Futur : la date de naissance est dans le futur. » pour un patient nommé Futur.

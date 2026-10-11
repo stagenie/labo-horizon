@@ -22,7 +22,16 @@ Le texte saisi est une chaîne simple : `message_post` l'échappe (chapitre 8), 
 fil de discussion. Le commentaire survit à l'assistant, qui sera effacé par le nettoyage des modèles
 transitoires : seule la demande garde une trace durable.
 
-Critère : le test `test_wizard_comment_posted_on_request` passe.
+Critère, à l'écran : après « Enregistrer et terminer », le fil de la demande affiche le commentaire, comme une note.
+Dans le shell, une saisie appliquée par le technicien avec
+`entry.comment = 'Sérum légèrement hémolysé'` laisse :
+
+```python
+>>> entry.action_apply()
+{'type': 'ir.actions.act_window_close'}
+>>> req.message_ids[0].body
+Markup('<p>Sérum légèrement hémolysé</p>')
+```
 
 ## Exercice 11.2 — « Remettre en brouillon » depuis la liste
 
@@ -34,4 +43,17 @@ le code `records.action_reset_draft()`.
 vraiment reste le `has_group` d'`action_reset_draft` (chapitre 10) : une action serveur exécute le code avec les
 droits de l'utilisateur qui la lance.
 
-Critère : le test `test_server_action_reset_draft` passe.
+Critère, à l'écran : connecté en administrateur, biologiste, le menu Actions de la liste des demandes propose
+« Remettre en brouillon » ; connecté en `technicien`, non. Une demande prélevée cochée revient à l'état Brouillon.
+Dans le shell :
+
+```python
+>>> reset = env.ref('lab_core.action_server_lab_request_reset_draft')
+>>> reset.name, reset.group_ids.full_name, reset.binding_view_types
+('Remettre en brouillon', 'Laboratoire / Biologiste', 'list')
+>>> req.action_sample()
+>>> reset.with_context(active_model='lab.request', active_ids=req.ids).run()
+False
+>>> req.state
+'draft'
+```
